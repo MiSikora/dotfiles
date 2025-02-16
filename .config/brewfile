@@ -1,0 +1,112 @@
+tap "buo/cask-upgrade"
+tap "homebrew/bundle"
+tap "mdogan/zulu"
+tap "nikitabobko/tap"
+# Improved shell history for zsh, bash, fish and nushell
+brew "atuin"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Command-line interface for SQLite
+brew "sqlite"
+# Command-line tool to manipulate Android App Bundles
+brew "bundletool"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Distributed revision control system
+brew "git"
+# Enable transparent encryption/decryption of files in a git repo
+brew "git-crypt"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Git extension for versioning large files
+brew "git-lfs"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# JQ clone focussed on correctness, speed, and simplicity
+brew "jaq"
+# Clone of ls with colorful output, file type icons, and more
+brew "lsd"
+# Theme for zsh
+brew "powerlevel10k"
+# Python version management
+brew "pyenv"
+# Ruby version manager
+brew "rbenv"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Display and control your Android device
+brew "scrcpy"
+# Simplified and community-driven man pages
+brew "tldr"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
+# UNIX shell (command interpreter)
+brew "zsh"
+# Fish-like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
+# Fish shell like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "aerospace"
+# Professional graphic design software
+cask "affinity-designer"
+# Professional image editing software
+cask "affinity-photo"
+# Professional desktop publishing software
+cask "affinity-publisher"
+# Command-line tools for building and debugging Android apps
+cask "android-commandlinetools"
+# Android SDK component
+cask "android-platform-tools"
+# Web browser
+cask "firefox"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# JetBrains tools manager
+cask "jetbrains-toolbox"
+# Keyboard customiser
+cask "karabiner-elements"
+# Media key forwarder for iTunes and Spotify
+cask "macmediakeyforwarder"
+# Native desktop app for Messenger (formerly Facebook Messenger)
+cask "messenger"
+# VPN client
+cask "mullvadvpn"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Podcast platform
+cask "pocket-casts"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# Team communication and collaboration software
+cask "slack"
+# Music streaming service
+cask "spotify"
+# Multimedia player
+cask "vlc"
+# Native desktop client for WhatsApp
+cask "whatsapp"
+cask "zulu-jdk11"
+cask "zulu-jdk17"
+cask "zulu-jdk21"
+cask "zulu-jdk8"

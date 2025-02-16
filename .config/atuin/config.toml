@@ -1,0 +1,9 @@
+style = "full"
+filter_mode_shell_up_key_binding = "directory"
+
+history_filter =[
+  "^clear$",
+  "^clear +",
+  "^exit$",
+  "^exit +",
+]

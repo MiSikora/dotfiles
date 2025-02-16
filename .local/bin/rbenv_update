@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+set -e
+
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 <ruby_version>"
+  exit 1
+fi
+
+ruby_version="$1"
+if [[ $(rbenv version-name global) == "$ruby_version" ]]; then
+  echo "Ruby version already set to $ruby_version"
+  exit 0
+fi
+
+# Install the specified Ruby version
+rbenv install "$ruby_version"
+rbenv global "$ruby_version"
+rbenv rehash
+
+# Save the version to the version file
+echo "$ruby_version" > "$XDG_CONFIG_HOME/rbenv/version"
+
+echo "Ruby $ruby_version installation complete"

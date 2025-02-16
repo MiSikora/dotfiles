@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+set -e
+
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 <python_version>"
+  exit 1
+fi
+
+python_version="$1"
+if [[ $(pyenv version-name global) == "$python_version" ]]; then
+  echo "Python version already set to $python_version"
+  exit 0
+fi
+
+# Install the specified Python version
+pyenv install "$python_version"
+pyenv global "$python_version"
+pyenv rehash
+
+# Save the version to the version file
+echo "$python_version" > "$XDG_CONFIG_HOME/pyenv/version"
+
+echo "Python $python_version installation complete"
