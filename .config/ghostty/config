@@ -3,14 +3,15 @@ theme = catppuccin-mocha
 # Use p10k recommended font
 font-family = "MesloLGS NF"
 font-size = 16
+
 # Disable ligatures
 font-feature = -calt
 font-feature = -liga
 font-feature = -dlic
 
 macos-titlebar-style = hidden
+mouse-hide-while-typing = true
 window-padding-x = 8
 window-padding-y = 8,0
 
 confirm-close-surface = false
-
