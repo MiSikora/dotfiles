@@ -3,6 +3,7 @@ vim.g.maplocalleader = "\\"
 
 vim.opt.relativenumber = true
 vim.opt.number = true
+vim.opt.wrap = false
 
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
