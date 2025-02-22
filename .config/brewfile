@@ -50,6 +50,8 @@ brew "rbenv"
 brew "ripgrep"
 # Display and control your Android device
 brew "scrcpy"
+# Simple keystroke visualizer
+brew "showkey"
 # Simplified and community-driven man pages
 brew "tldr"
 # Terminal multiplexer
