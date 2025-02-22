@@ -12,7 +12,7 @@ vim.opt.expandtab = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.clipboard:append("unnamedplus")
+vim.opt.clipboard = "unnamedplus"
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
