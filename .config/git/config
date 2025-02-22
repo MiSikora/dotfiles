@@ -5,6 +5,7 @@
 [core]
 	autocrlf = input
 	pager = delta
+	editor = nvim
 [init]
 	defaultBranch = trunk
 [commit]
