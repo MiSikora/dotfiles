@@ -78,11 +78,10 @@ export FZF_DEFAULT_OPTS=" \
 # Treat slashes as word sperators for navigation
 WORDCHARS=${WORDCHARS//[\/]}
 
-# Use installed curl before system
+# Use installed programs before system
 export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
-
-# Use installed sqlite before system
 export PATH="$(brew --prefix)/opt/sqlite/bin:$PATH"
+export PATH="$(brew --prefix)/opt/bash/bin:$PATH"
 
 # Enable mouse scroll in git-delta
 export LESS='-R --mouse'
