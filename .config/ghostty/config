@@ -10,7 +10,9 @@ font-feature = -liga
 font-feature = -dlic
 
 macos-titlebar-style = hidden
+macos-option-as-alt = true
 mouse-hide-while-typing = true
+
 window-padding-color = extend
 window-padding-x = 8
 window-padding-y = 8,0
