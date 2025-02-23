@@ -1,2 +1,2 @@
-require("config.core")
-require("config.lazy")
+require("mehow.config")
+require("mehow.lazy")
