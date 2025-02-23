@@ -9,7 +9,7 @@ opt.relativenumber = true
 opt.signcolumn = "yes"
 
 opt.wrap = false
-opt.scrolloff = 8
+opt.scrolloff = 999
 opt.colorcolumn = "100"
 
 opt.tabstop = 2
@@ -19,7 +19,7 @@ opt.expandtab = true
 opt.autoindent = true
 opt.smartindent = true
 
-opt.hlsearch = true 
+opt.hlsearch = true
 opt.incsearch = true
 opt.ignorecase = true
 opt.smartcase = true
