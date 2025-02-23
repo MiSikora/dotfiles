@@ -99,7 +99,11 @@ tmux_session() {
     return 0
   fi
 
-  selected_name=$(basename "$selected" | tr . _)
+  if [[ $(echo $XDG_CONFIG_HOME) == $(echo $1) ]]; then
+    selected_name="dotfiles"
+  else
+    selected_name=$(basename "$selected" | tr . _)
+  fi
   tmux_running=$(pgrep tmux)
 
   if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
@@ -109,7 +113,7 @@ tmux_session() {
 
   if ! tmux has -t=$selected_name 2> /dev/null; then
     tmux new -ds $selected_name -c $selected
-  fi  
+  fi
 
   if [[ -n $TMUX ]]; then
     tmux switchc -t $selected_name
@@ -145,4 +149,4 @@ alias bdump="brew bundle --global --force --describe dump"
 alias ls="lsd -A --permission octal --group-directories-first"
 alias fzfa="atuin history list --cmd-only | fzf"
 
-alias tsh="tmux_session ~"
+alias tsc="tmux_session $XDG_CONFIG_HOME"
