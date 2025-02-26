@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -e
 
 section() {
@@ -23,7 +23,7 @@ fail() {
 
 section "Xcode CLI tools setup"
 
-if ! xcode-select --print-path > /dev/null 2>&1; then
+if ! xcode-select --print-path >/dev/null 2>&1; then
   info "Installing Xcode CLI tools"
   touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
   softwareupdate -i -a
@@ -32,7 +32,7 @@ if ! xcode-select --print-path > /dev/null 2>&1; then
     rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
   fi
 
-  if ! xcode-select --print-path > /dev/null 2>&1; then
+  if ! xcode-select --print-path >/dev/null 2>&1; then
     fail "Xcode CLI tools not found"
   else
     success "Xcode CLI tools installed"
@@ -43,7 +43,7 @@ fi
 
 section "Homebrew setup"
 
-if ! command -v brew > /dev/null 2>&1; then
+if ! command -v brew >/dev/null 2>&1; then
   info "Installing Homebrew"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   if [[ -x "/opt/homebrew/bin/brew" ]]; then
@@ -52,7 +52,7 @@ if ! command -v brew > /dev/null 2>&1; then
   fi
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
-  if ! command -v brew > /dev/null 2>&1; then
+  if ! command -v brew >/dev/null 2>&1; then
     fail "Homebrew not found"
   else
     info "Disabling Homebrew analytics"
@@ -101,7 +101,7 @@ if ! gpg --list-secret-keys --keyid-format=long | grep -q E210EE60F056F7DD; then
   if [[ ! -f "$git_crypt_key_path" ]]; then
     fail "$git_crypt_key_path does not exist"
   fi
-  
+
   gpg --import "$git_crypt_key_path"
   echo -e "trust\n5\ny\nsave\n" | gpg --command-fd 0 --edit-key "E210EE60F056F7DD"
   info "git-crypt key successfully imported"
@@ -109,13 +109,13 @@ if ! gpg --list-secret-keys --keyid-format=long | grep -q E210EE60F056F7DD; then
   info "Do you wish to delete $git_crypt_key_path file? [Y/n] "
   read -r yn
   case $yn in
-    [Nn]*)
-      success "Keeping $git_crypt_key_path file"
-      ;;
-    *)
-      rm -f "$git_crypt_key_path"
-      success "$git_crypt_key_path file succsessfully deleted"
-      ;;
+  [Nn]*)
+    success "Keeping $git_crypt_key_path file"
+    ;;
+  *)
+    rm -f "$git_crypt_key_path"
+    success "$git_crypt_key_path file succsessfully deleted"
+    ;;
   esac
 else
   success "git-crypt key already exists"
@@ -124,7 +124,7 @@ fi
 if [[ "$(head -n 1 "$XDG_CONFIG_HOME/secret/check.txt")" != "decrypted" ]]; then
   info "Decrypting secrets"
   command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" crypt unlock
-  
+
   if [[ "$(head -n 1 "$XDG_CONFIG_HOME/secret/check.txt")" != "decrypted" ]]; then
     fail "Failed to decrypt secrets"
   else
@@ -141,9 +141,9 @@ if ! gpg --list-secret-keys --keyid-format=long | grep -q 533F4DBAF854E83C; then
   if [[ ! -f "$git_signing_key_path" ]]; then
     fail "$git_signing_key_path does not exist"
   fi
-  
+
   gpg --import "$git_signing_key_path"
-  echo -e "trust\n5\ny\nsave\n" | gpg --command-fd 0 --edit-key "533F4DBAF854E83C"  
+  echo -e "trust\n5\ny\nsave\n" | gpg --command-fd 0 --edit-key "533F4DBAF854E83C"
   info "git signing key successfully imported"
 else
   success "git signing key already exists"
@@ -151,7 +151,7 @@ fi
 
 if [[ ! $(echo host=github.com | git credential-osxkeychain get) ]]; then
   info "Importing GitHub token"
-  < "$XDG_CONFIG_HOME/secret/gh-token.txt" git credential-osxkeychain store
+  <"$XDG_CONFIG_HOME/secret/gh-token.txt" git credential-osxkeychain store
 
   if [[ ! $(echo host=github.com | git credential-osxkeychain get) ]]; then
     fail "Failed to import GitHub token"
@@ -190,6 +190,7 @@ if [[ ! -d "$tpm_dir" ]]; then
   fi
 
   info "Installing tpm plugins"
+  # shellcheck source=../tmux/plugins/tpm/bin/install_plugins
   source "$XDG_CONFIG_HOME/tmux/plugins/tpm/bin/install_plugins"
   success "tpm installed"
 else
