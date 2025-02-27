@@ -22,9 +22,11 @@ sh ~/.config/setup/macos.sh
 4. Grant access to Files and Folders.
 5. Go to Raycast settings.
 6. Import configuration from `~/.config/raycast/config.rayconfig`.
-7. Go to **System Preferences > Keyboard > Shortcuts > Spotlight**.
-8. Disable Spotlight's keyboard shortcut.
-9. Drag and drop (⌘) Spotlight's menu bar icon to remove it.
+7. Go to **System Preferences > Keyboard**.
+8. Disable Emoji picker on Globe key.
+9. Go to **System Preferences > Keyboard > Shortcuts > Spotlight**.
+10. Disable Spotlight's keyboard shortcut.
+11. Drag and drop (⌘) Spotlight's menu bar icon to remove it.
 
 ## Apps to configure
 
