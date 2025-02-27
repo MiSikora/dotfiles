@@ -2,15 +2,15 @@ return {
   "nvim-lualine/lualine.nvim",
   dependecies = { "nvim-tree/nvim-web-devicons" },
   config = function()
-    local falvour = require("catppuccin").flavour
+    local flavour = require("catppuccin").flavour
     local palette = require("catppuccin.palettes").get_palette(flavour)
     local lazy_status = require("lazy.status")
 
-    require("lualine").setup {
+    require("lualine").setup({
       options = {
         theme = "catppuccin",
         refresh = {
-          statusline = 8
+          statusline = 8,
         },
       },
       sections = {
@@ -21,9 +21,9 @@ return {
             symbols = {
               modifed = "",
               readonly = "",
-              unnamed = ""
+              unnamed = "",
             },
-          }
+          },
         },
         lualine_x = {
           {
@@ -35,6 +35,6 @@ return {
           { "filetype" },
         },
       },
-    }
+    })
   end,
 }

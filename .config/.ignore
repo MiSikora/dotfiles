@@ -1,0 +1,14 @@
+fzf/*
+jgit/*
+raycast/*
+tmux/plugins/*
+brewfile
+captureone/*
+gnupg/*
+karabiner/*
+pyenv/*
+rbenv/*
+nvim/lazy-lock.json
+zsh/*
+!zsh/.zshrc
+!zsh/.zprofile

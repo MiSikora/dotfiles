@@ -6,7 +6,7 @@ return {
     trailspace.setup()
 
     vim.api.nvim_create_autocmd("BufWritePre", {
-      callback = function(args)
+      callback = function()
         trailspace.trim()
         trailspace.trim_last_lines()
       end,
