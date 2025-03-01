@@ -12,3 +12,4 @@ nvim/lazy-lock.json
 zsh/*
 !zsh/.zshrc
 !zsh/.zprofile
+!.ignore
