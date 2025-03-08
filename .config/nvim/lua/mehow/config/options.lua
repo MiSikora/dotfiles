@@ -10,7 +10,7 @@ opt.signcolumn = "yes"
 
 opt.wrap = false
 opt.scrolloff = 999
-opt.colorcolumn = "100"
+opt.colorcolumn = "120"
 
 opt.tabstop = 2
 opt.softtabstop = 2
