@@ -13,3 +13,4 @@ zsh/*
 !zsh/.zshrc
 !zsh/.zprofile
 !.ignore
+!nvim/.stylua.toml
