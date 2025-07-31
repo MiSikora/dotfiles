@@ -134,6 +134,53 @@ git() {
   fi
 }
 
+# Select JDK version
+__jdk() {
+  version=$1
+  flavor=$2
+  is_graal=false
+  if [[ "$(echo "$flavor" | tr '[:upper:]' '[:lower:]')" == "graal" ]]; then
+    is_graal=true
+  fi
+
+  java_home_json=$(/usr/libexec/java_home -X | plutil -convert json -o - -)
+
+  if [[ "$is_graal" == true ]]; then
+    java_home=$(echo "$java_home_json" \
+      | jaq -r --arg ver "$version" \
+        '[.[]
+          | select(.JVMName | test("graal"; "i"))
+          | select(.JVMPlatformVersion | startswith($ver))
+          | .JVMHomePath
+         ][0] // ""'
+    )
+  else
+    java_home=$(echo "$java_home_json" \
+      | jaq -r --arg ver "$version" \
+        '[.[]
+          | select(.JVMName | test("graal"; "i") | not)
+          | select(.JVMPlatformVersion | startswith($ver))
+          | .JVMHomePath
+         ][0] // ""'
+    )
+  fi
+
+  if [[ -n "$java_home" ]]; then
+    export JAVA_HOME=$java_home
+    if [[ "$is_graal" == true ]]; then
+      export GRAALVM_HOME=$java_home
+    fi 
+  fi
+}
+
+jdk() {
+  __jdk "$@"
+  java -version
+}
+
+__jdk 21 graal
+__jdk 21
+
 export PATH="$PATH:$XDG_LOCAL_HOME/bin"
 
 alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
