@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -e
 
 # Based on: https://github.com/mathiasbynens/dotfiles/blob/c886e139233320e29fd882960ba3dd388d57afd7/.macos
@@ -82,21 +82,6 @@ defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
 
 # Disable press-and-hold for keys in favor of key repeat so it won't show special characters etc.
 defaults write -g ApplePressAndHoldEnabled -bool false
-
-# Disable trackapad gestures 
-defaults write NSGlobalDomain com.apple.trackpad.forceClick -int 0
-defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 0 
-defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture -int 0 
-defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture -int 0 
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0 
-defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeGesture -int 0 
-defaults write com.apple.AppleMultitouchTrackpad TrackpadRotate -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadFiveFingerPinchGesture -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadFourFingerPinchGesture -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadFourFingerVertSwipeGesture -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerVertSwipeGesture -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerFromRightEdgeGesture -int 0 
-defaults write com.apple.AppleBluetoothMultitouch.trackpad TrackpadRotate -int 0 
 
 # Set fast keyboard repeat rate
 defaults write -g InitialKeyRepeat -int 10
@@ -288,25 +273,6 @@ defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 # Disable automatic spell checking
 defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
 
-# Load new settings before rebuilding the index
-killall mds > /dev/null 2>&1
-
-# Make sure indexing is enabled for the main volume
-sudo mdutil -i on / > /dev/null
-
-# Rebuild the index from scratch
-sudo mdutil -E / > /dev/null
-
-###############################################################################
-# Time Machine                                                                #
-###############################################################################
-
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
-# Disable local Time Machine backups
-hash tmutil &> /dev/null && sudo tmutil disablelocal
-
 ################################################################################
 ## Mac App Store                                                               #
 ################################################################################
@@ -353,27 +319,4 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 defaults write com.apple.AdLib.plist allowApplePersonalizedAdvertising -bool false
 defaults write com.apple.AdLib.plist allowIdentifierForAdvertising -bool false
 defaults write com.apple.AdLib.plist personalizedAdsMigrated -bool false
-
-################################################################################
-## Touch ID
-################################################################################
-
-# Link Touch ID <-> Sudo
-if grep -Fq "pam_tid.so" /etc/pam.d/sudo; then
-    echo -e "${GRAY}---- Touch ID is already sudo-able${NC}"
-else
-    echo -e "${PURPLE}---- Touch ID is already sudo-able${NC}"
-    echo "auth       sufficient     pam_tid.so" | sudo tee -a /etc/pam.d/sudo
-fi
-
-###############################################################################
-# Kill affected applications                                                  #
-###############################################################################
-
-killall Dock
-killall Finder
-killall Main
-killall Messages
-killall Photos
-killall SystemUIServer
 
