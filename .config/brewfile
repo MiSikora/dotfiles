@@ -1,5 +1,4 @@
 tap "buo/cask-upgrade"
-tap "mdogan/zulu"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -102,7 +101,3 @@ cask "spotify"
 cask "vlc"
 # Native desktop client for WhatsApp
 cask "whatsapp"
-cask "zulu-jdk11"
-cask "zulu-jdk17"
-cask "zulu-jdk21"
-cask "zulu-jdk8"

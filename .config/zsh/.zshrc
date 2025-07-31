@@ -134,13 +134,6 @@ git() {
   fi
 }
 
-# Select JDK version
-jdk() {
-  version=$1
-  export JAVA_HOME=$(/usr/libexec/java_home -v"$version")
-  java -version
-}
-
 export PATH="$PATH:$XDG_LOCAL_HOME/bin"
 
 alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
