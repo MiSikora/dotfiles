@@ -92,6 +92,8 @@ cask "linear-linear"
 cask "macmediakeyforwarder"
 # Native desktop app for Messenger (formerly Facebook Messenger)
 cask "messenger"
+# VPN client
+cask "mullvad-vpn"
 # Open-source software for live streaming and screen recording
 cask "obs"
 # Podcast platform
