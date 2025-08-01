@@ -75,6 +75,8 @@ cask "affinity-publisher"
 cask "android-commandlinetools"
 # Android SDK component
 cask "android-platform-tools"
+# Collaborative team software
+cask "figma"
 # Web browser
 cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
