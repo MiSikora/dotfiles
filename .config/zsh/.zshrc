@@ -135,7 +135,7 @@ git() {
 }
 
 # Select JDK version
-__jdk() {
+_jdk() {
   version=$1
   flavor=$2
   is_graal=false
@@ -178,8 +178,8 @@ jdk() {
   java -version
 }
 
-__jdk 21 graal
-__jdk 21
+_jdk 21 graal
+_jdk 21
 
 export PATH="$PATH:$XDG_LOCAL_HOME/bin"
 
