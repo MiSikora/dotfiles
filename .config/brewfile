@@ -86,6 +86,8 @@ cask "graalvm-jdk21"
 cask "jetbrains-toolbox"
 # Keyboard customiser
 cask "karabiner-elements"
+# App to manage software development and track bugs
+cask "linear-linear"
 # Media key forwarder for iTunes and Spotify
 cask "macmediakeyforwarder"
 # Native desktop app for Messenger (formerly Facebook Messenger)
