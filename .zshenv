@@ -7,7 +7,7 @@ export XDG_LOCAL_HOME="$HOME/.local"
 export XDG_DATA_HOME="$XDG_LOCAL_HOME/share"
 export XDG_STATE_HOME="$XDG_LOCAL_HOME/state"
 
-# Zsh dir
+# zsh dir
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
 export PATH="$XDG_LOCAL_HOME/bin:$PATH"
