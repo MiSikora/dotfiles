@@ -21,9 +21,8 @@ source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # --- fzf ---
 
-# fzf config based on: https://github.com/josean-dev/dev-environment-files/blob/cb670e8890ca9d8baf978b38ed75987b742032e6/.zshrc
-
 source <(fzf --zsh)
+
 # rebind fzf ctrl+r to atuin
 bindkey -M emacs '^R' atuin-search
 
@@ -44,6 +43,7 @@ _fzf_compgen_dir() {
   fd --type=d --hidden --exclude .git . "$1"
 }
 
+# Use lsd and bat for previews
 file_or_dir_preview="if [[ -d {} ]]; then lsd --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
 export FZF_CTRL_T_OPTS="--preview '$file_or_dir_preview'"
@@ -73,18 +73,7 @@ export FZF_DEFAULT_OPTS=" \
 --color=selected-bg:#45475a \
 --multi"
 
-# --- misc ---
-
-# Treat slashes as word sperators for navigation
-WORDCHARS=${WORDCHARS//[\/]}
-
-# Use installed programs before system
-export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
-export PATH="$(brew --prefix)/opt/sqlite/bin:$PATH"
-export PATH="$(brew --prefix)/opt/bash/bin:$PATH"
-
-# Enable mouse scroll in git-delta
-export LESS='-R --mouse'
+# --- custom functions ---
 
 # Create tmux session from a dir
 # Based on https://github.com/ThePrimeagen/.dotfiles/blob/602019e902634188ab06ea31251c01c1a43d1621/bin/.local/scripts/tmux-sessionizer
@@ -183,12 +172,23 @@ jdk() {
 _jdk 21 graal
 _jdk 21
 
-export PATH="$PATH:$XDG_LOCAL_HOME/bin"
+# Treat slashes as word sperators for navigation
+WORDCHARS=${WORDCHARS//[\/]}
 
-alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
+# Use installed programs before system ones
+export PATH="$(brew --prefix)/opt/curl/bin:$PATH"
+export PATH="$(brew --prefix)/opt/sqlite/bin:$PATH"
+export PATH="$(brew --prefix)/opt/bash/bin:$PATH"
+
+# Enable mouse scroll in git-delta
+export LESS='-R --mouse'
+
+# --- aliases ---
+
 alias bdump="brew bundle --global --force --describe dump"
+alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
 
-alias ls="lsd -A --permission octal --group-directories-first"
+alias ls="lsd -A --group-directories-first"
 alias fzfa="atuin history list --cmd-only | fzf"
 
 alias tsc="tmux_session $XDG_CONFIG_HOME"
