@@ -39,6 +39,7 @@ sh ~/.config/setup/macos.sh
 - Capture One
 - Affinity Suite
 - Email
+- Calendar
 - Messages
 - WhatsApp
 - Messenger

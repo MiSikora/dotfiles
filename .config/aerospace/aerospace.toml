@@ -46,6 +46,7 @@ accordion-padding = 24
     ctrl-alt-cmd-shift-9 = "workspace 9"
     ctrl-alt-cmd-shift-0 = "workspace 0"
     ctrl-alt-cmd-shift-a = "workspace A"
+    ctrl-alt-cmd-shift-c = "workspace C"
     ctrl-alt-cmd-shift-b = "workspace B"
     ctrl-alt-cmd-shift-e = "workspace E"
     ctrl-alt-cmd-shift-f = "workspace F"
@@ -77,6 +78,7 @@ accordion-padding = 24
     ctrl-alt-cmd-9 = "move-node-to-workspace 9"
     ctrl-alt-cmd-0 = "move-node-to-workspace 0"
     ctrl-alt-cmd-a = "move-node-to-workspace A"
+    ctrl-alt-cmd-c = "move-node-to-workspace C"
     ctrl-alt-cmd-b = "move-node-to-workspace B"
     ctrl-alt-cmd-e = "move-node-to-workspace E"
     ctrl-alt-cmd-f = "move-node-to-workspace F"
@@ -143,6 +145,11 @@ accordion-padding = 24
 [[on-window-detected]]
     if.app-id = "org.mozilla.firefox"
     run = ["move-node-to-workspace B"]
+
+# [C]alendar
+[[on-window-detected]]
+    if.app-id = "com.apple.iCal"
+    run = ["move-node-to-workspace C"]
 
 # [I]DE
 
