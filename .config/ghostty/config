@@ -1,4 +1,4 @@
-theme = catppuccin-mocha.conf
+rtheme = catppuccin-mocha.conf
 
 # Use p10k recommended font
 font-family = "MesloLGS NF"
@@ -17,3 +17,6 @@ window-padding-x = 8
 window-padding-y = 8,0
 
 confirm-close-surface = false
+
+# Forward cmd+k to tmux
+keybind = command+k=text:\x0c
