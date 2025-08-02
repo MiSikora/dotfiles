@@ -176,7 +176,7 @@ _jdk() {
 }
 
 jdk() {
-  __jdk "$@"
+  _jdk "$@"
   java -version
 }
 
