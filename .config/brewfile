@@ -115,4 +115,5 @@ cask "spotify"
 cask "vlc"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+cask "zulu-jdk17"
 cask "zulu-jdk21"
