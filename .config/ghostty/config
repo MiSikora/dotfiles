@@ -1,4 +1,4 @@
-rtheme = catppuccin-mocha.conf
+theme = catppuccin-mocha.conf
 
 # Use p10k recommended font
 font-family = "MesloLGS NF"
@@ -20,3 +20,6 @@ confirm-close-surface = false
 
 # Forward cmd+k to tmux
 keybind = command+k=text:\x0c
+
+# Global terminal
+keybind = global:ctrl+option+space=toggle_quick_terminal
