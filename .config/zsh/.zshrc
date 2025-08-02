@@ -101,6 +101,8 @@ tmux_session() {
 
   if [[ $(echo $XDG_CONFIG_HOME) == $(echo $1) ]]; then
     selected_name="dotfiles"
+  elif [[ $(echo $HOME) == $(echo $1) ]]; then
+    selected_name="home"
   else
     selected_name=$(basename "$selected" | tr . _)
   fi
@@ -190,3 +192,4 @@ alias ls="lsd -A --permission octal --group-directories-first"
 alias fzfa="atuin history list --cmd-only | fzf"
 
 alias tsc="tmux_session $XDG_CONFIG_HOME"
+alias tsh="tmux_session $HOME"
