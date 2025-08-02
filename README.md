@@ -35,6 +35,7 @@ sh ~/.config/setup/macos.sh
 - Mullvad
 - Shottr (Meta+P hotkey)
 - Firefox
+- Espanso
 - JetBrains Toolbox
 - Capture One
 - Affinity Suite

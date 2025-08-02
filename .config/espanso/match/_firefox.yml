@@ -1,0 +1,13 @@
+matches:
+  - trigger: "pr_idea"
+    replace: "💡"
+  - trigger: "pr_nit"
+    replace: "⛏️"
+  - trigger: "pr_ask"
+    replace: "❓"
+  - trigger: "pr_love"
+    replace: "❤️"
+  - trigger: "pr_warn"
+    replace: "⚠️"
+  - trigger: "pr_block"
+    replace: "🚫"
