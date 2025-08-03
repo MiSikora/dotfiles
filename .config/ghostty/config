@@ -18,8 +18,5 @@ window-padding-y = 8,0
 
 confirm-close-surface = false
 
-# Forward cmd+k to tmux
-keybind = command+k=text:\x0c
-
 # Global terminal
 keybind = global:ctrl+option+space=toggle_quick_terminal
