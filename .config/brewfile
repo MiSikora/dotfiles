@@ -36,6 +36,8 @@ brew "imagemagick"
 brew "jaq"
 # Clone of ls with colorful output, file type icons, and more
 brew "lsd"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
 # Theme for zsh
 brew "powerlevel10k"
 # Python version management

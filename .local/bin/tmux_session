@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+  selected=$1
+else
+  selected=$(fd -t d -d 1 -E "*.git" . "$HOME/projects" | fzf)
+fi
+
+if [[ -z $selected ]]; then
+  exit 0
+fi
+
+if [[ "$selected" == "$XDG_CONFIG_HOME" ]]; then
+  selected_name="dotfiles"
+elif [[ "$selected" == "$HOME" ]]; then
+  selected_name="home"
+else
+  selected_name=$(basename "$selected" | tr . _)
+fi
+
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+  exec tmux new -s "$selected_name" -c "$selected"
+fi
+
+if ! tmux has -t="$selected_name" 2> /dev/null; then
+  tmux new -ds "$selected_name" -c "$selected"
+fi
+
+if [[ -n $TMUX ]]; then
+  tmux switchc -t "$selected_name"
+else
+  exec tmux attach -d -t "$selected_name" -c "$selected"
+fi

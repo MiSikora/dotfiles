@@ -1,0 +1,40 @@
+#!/usr/bin/env bash 
+
+version="$1"
+flavor="$2"
+is_graal=false
+
+if [[ "$(echo "$flavor" | tr '[:upper:]' '[:lower:]')" == "graal" ]]; then
+  is_graal=true
+fi
+
+# Get list of installed JDKs in JSON
+java_home_json=$(/usr/libexec/java_home -X | plutil -convert json -o - -)
+
+if [[ "$is_graal" == true ]]; then
+  java_home=$(echo "$java_home_json" \
+    | jaq -r --arg ver "$version" \
+      '[.[]
+        | select(.JVMName | test("graal"; "i"))
+        | select(.JVMPlatformVersion | startswith($ver))
+        | .JVMHomePath
+       ][0] // ""')
+else
+  java_home=$(echo "$java_home_json" \
+    | jaq -r --arg ver "$version" \
+      '[.[]
+        | select(.JVMName | test("graal"; "i") | not)
+        | select(.JVMPlatformVersion | startswith($ver))
+        | .JVMHomePath
+       ][0] // ""')
+fi
+
+if [[ -n "$java_home" ]]; then
+  echo "export JAVA_HOME=$java_home"
+  if [[ "$is_graal" == true ]]; then
+    echo "export GRAALVM_HOME=$java_home"
+  fi
+else
+  echo "Error: No JDK found for version '$version'${flavor:+ and flavor '$flavor'}" >&2
+  exit 1
+fi

@@ -1,13 +1,31 @@
 #!/usr/bin/env zsh
 
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
+# Install Homebrew's casks in global applications and skip Gatekeeper
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --no_quarantine: true"
+
+# Use config dir for Homebrew
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
+
+# Use config dir for git 
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+
+# Use config dir for GnuPG
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
+
+# Keep dotfiles git structure in projects dir
 export DOTFILES_GIT="$HOME/projects/dotfiles.git"
+
+# Configure Android's SDK to run builds without the need for local.properties
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 
+# Homebrew variables
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Initialize Atuin
 eval "$(atuin init zsh)"
+
+# Initialize rbenv
 eval "$(rbenv init - --no-rehash zsh)"
+
+# Initialize pyenv
 eval "$(pyenv init - zsh)"

@@ -7,7 +7,14 @@ export XDG_LOCAL_HOME="$HOME/.local"
 export XDG_DATA_HOME="$XDG_LOCAL_HOME/share"
 export XDG_STATE_HOME="$XDG_LOCAL_HOME/state"
 
-# zsh dir
+# Include custom scripts in the path
+export PATH="$XDG_LOCAL_HOME/bin:$PATH"
+
+# Zsh configuration 
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
-export PATH="$XDG_LOCAL_HOME/bin:$PATH"
+# Disable Apple's save/resotre mechanism
+export SHELL_SESSIONS_DISABLE=1
+
+# Configure Neovim as editor
+export MANPAGER="nvim +Man!"
