@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+commit="$1"
+if [[ -z "$commit" ]]; then
+  echo "Usage: git rebase-cherry <commit_hash>"
+  exit 1
+fi
+
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "Error: Not a git repository"
+  exit 1
+fi
+
+git fetch -p
+git pull --ff-only
+
+tracking_branch=$(git for-each-ref --format="%(upstream:short)" "$(git symbolic-ref -q HEAD)")
+if [[ -z "$tracking_branch" ]]; then
+  echo "Error: Current branch has no upstream tracking branch"
+  exit 1
+fi
+
+git reset --hard "$(git trunk)"
+
+latest_commit=$(git rev-parse "$tracking_branch")
+git cherry-pick "$commit"^.."$latest_commit"
