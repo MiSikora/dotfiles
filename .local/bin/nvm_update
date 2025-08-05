@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "$1" ]]; then
+  echo "Usage: $0 <node_version>"
+  exit 1
+fi
+
+# source "$ZDOTDIR/.zprofile"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+
+node_version="$1"
+if [[ $(nvm alias default) == *"$node_version"* ]]; then
+  echo "Node version already set to $node_version"
+  exit 0
+fi
+
+# Install the specified Node version
+nvm install "$node_version"
+nvm alias default "$node_version"
+
+# Save the version to the version file
+echo "$node_version" > "$XDG_CONFIG_HOME/nvm/version"
+
+echo "Node $node_version installation complete"

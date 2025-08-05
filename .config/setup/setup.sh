@@ -233,6 +233,26 @@ else
   success "Python $python_version already installed"
 fi
 
+section "nvm setup"
+
+node_version="$(cat "$XDG_CONFIG_HOME"/nvm/version)"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+if [[ $(nvm alias default) != *"$node_version"* ]]; then
+  info "Installin Node $node_version"
+  nvm install "$node_version"
+  nvm alias default "$node_version"
+
+  if [[ $(nvm alias default) != *"$node_version"* ]];then
+    fail "Failed to install Node $node_version"
+  else
+    success "Installed Node $node_version"
+  fi
+else
+  success "Node "$node_version" already installed"
+fi
+
 section "zsh setup"
 
 brew_zsh="$(brew --prefix)/bin/zsh"
