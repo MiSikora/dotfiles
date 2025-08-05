@@ -6,7 +6,7 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications --no_quarantine: true"
 # Use config dir for Homebrew
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
 
-# Use config dir for git 
+# Use config dir for git
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
 
 # Use config dir for GnuPG
@@ -29,3 +29,8 @@ eval "$(rbenv init - --no-rehash zsh)"
 
 # Initialize pyenv
 eval "$(pyenv init - zsh)"
+
+# Initialize nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
