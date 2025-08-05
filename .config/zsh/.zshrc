@@ -17,6 +17,7 @@ source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZDOTDIR/fzf.zsh"
+source "${XDG_CONFIG_HOME}/secret/env"
 
 bindkey -s ^f "tmux_session\n"
 
