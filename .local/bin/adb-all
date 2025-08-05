@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+[[ $# -lt 1 ]] && adb && exit 0
+
+devices=$(adb devices | awk 'NR>1 && $2=="device" {print $1}')
+
+[[ -z "$devices" ]] && exit 0
+
+success=false
+for device in $devices; do
+    if adb -s "$device" "$@"; then
+        success=true
+    fi
+done
+if [[ $success == false ]]; then
+  echo "Error: command failed on all devices" >&2
+  exit 1
+fi
