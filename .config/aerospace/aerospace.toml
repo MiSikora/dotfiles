@@ -158,7 +158,7 @@ accordion-padding = 24
     run = ["move-node-to-workspace I"]
 
 [[on-window-detected]]
-    if.app-id = "com.jeetbrains.intellij.ce"
+    if.app-id = "com.jetbrains.intellij.ce"
     run = ["move-node-to-workspace I"]
 
 # [M]essaging
