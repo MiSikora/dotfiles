@@ -24,7 +24,7 @@ if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
   exec tmux new -s "$selected_name" -c "$selected"
 fi
 
-if ! tmux has -t="$selected_name" 2> /dev/null; then
+if ! tmux has -t="$selected_name" 2>/dev/null; then
   tmux new -ds "$selected_name" -c "$selected"
 fi
 

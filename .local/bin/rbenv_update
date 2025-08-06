@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -e
 
 if [[ -z "$1" ]]; then
@@ -18,6 +18,6 @@ rbenv global "$ruby_version"
 rbenv rehash
 
 # Save the version to the version file
-echo "$ruby_version" > "$XDG_CONFIG_HOME/rbenv/version"
+echo "$ruby_version" >"$XDG_CONFIG_HOME/rbenv/version"
 
 echo "Ruby $ruby_version installation complete"

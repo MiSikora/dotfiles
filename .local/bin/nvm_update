@@ -23,6 +23,6 @@ nvm install "$node_version"
 nvm alias default "$node_version"
 
 # Save the version to the version file
-echo "$node_version" > "$XDG_CONFIG_HOME/nvm/version"
+echo "$node_version" >"$XDG_CONFIG_HOME/nvm/version"
 
 echo "Node $node_version installation complete"

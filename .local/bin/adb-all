@@ -8,9 +8,9 @@ devices=$(adb devices | awk 'NR>1 && $2=="device" {print $1}')
 
 success=false
 for device in $devices; do
-    if adb -s "$device" "$@"; then
-        success=true
-    fi
+  if adb -s "$device" "$@"; then
+    success=true
+  fi
 done
 if [[ $success == false ]]; then
   echo "Error: command failed on all devices" >&2

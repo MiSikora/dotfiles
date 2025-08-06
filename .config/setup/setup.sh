@@ -244,14 +244,18 @@ if [[ $(nvm alias default) != *"$node_version"* ]]; then
   nvm install "$node_version"
   nvm alias default "$node_version"
 
-  if [[ $(nvm alias default) != *"$node_version"* ]];then
+  if [[ $(nvm alias default) != *"$node_version"* ]]; then
     fail "Failed to install Node $node_version"
   else
     success "Installed Node $node_version"
   fi
 else
-  success "Node "$node_version" already installed"
+  success "Node $node_version already installed"
 fi
+
+while read -r package; do
+  npm i -g "$package"
+done <"$XDG_CONFIG_HOME/nvm/packages"
 
 section "zsh setup"
 

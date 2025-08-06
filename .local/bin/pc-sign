@@ -5,12 +5,12 @@ password="$POCKET_CASTS_PASSWORD"
 
 while getopts ":u:p:" opt; do
   case $opt in
-    u)
-      username="$OPTARG"
-      ;;
-    p)
-      password="$OPTARG"
-      ;;
+  u)
+    username="$OPTARG"
+    ;;
+  p)
+    password="$OPTARG"
+    ;;
   esac
 done
 

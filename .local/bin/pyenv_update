@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -e
 
 if [[ -z "$1" ]]; then
@@ -18,6 +18,6 @@ pyenv global "$python_version"
 pyenv rehash
 
 # Save the version to the version file
-echo "$python_version" > "$XDG_CONFIG_HOME/pyenv/version"
+echo "$python_version" >"$XDG_CONFIG_HOME/pyenv/version"
 
 echo "Python $python_version installation complete"
