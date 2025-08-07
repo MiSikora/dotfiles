@@ -10,6 +10,8 @@ brew "bat"
 brew "btop"
 # Command-line tool to manipulate Android App Bundles
 brew "bundletool"
+# Statistics utility to count lines of code
+brew "cloc"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
 # Perl lib for reading and writing EXIF metadata
