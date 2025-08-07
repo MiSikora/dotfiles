@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOSSINESS=30
+IMAGE=""
+
+usage="Split a GIF into 64×64 tiles and optimize them.
+Usage:
+  $0 -i <gif> [-l <lossiness>]
+
+Options:
+  -i   source GIF file (required)
+  -l   allowed artifacts for GIF lossy compression (default: 30)
+"
+
+options=':i:l:'
+while getopts $options option; do
+  case "$option" in
+  i) IMAGE=$(realpath "$OPTARG") ;;
+  l) LOSSINESS="$OPTARG" ;;
+  :)
+    printf "Missing argument for -%s\n\n" "$OPTARG" >&2
+    echo "$usage" >&2
+    exit 1
+    ;;
+  \?)
+    printf "Illegal option: -%s\n\n" "$OPTARG" >&2
+    echo "$usage" >&2
+    exit 1
+    ;;
+  esac
+done
+
+if [[ -z "${IMAGE}" || ! -f "${IMAGE}" ]]; then
+  echo "Error: -i must point to an existing GIF file." >&2
+  echo "$usage" >&2
+  exit 1
+fi
+
+if ! [[ "$LOSSINESS" =~ ^[0-9]+$ ]]; then
+  echo "Error: -l '${LOSSINESS}' must be a non-negative integer." >&2
+  exit 1
+fi
+
+if ! command -v magick >/dev/null 2>&1; then
+  echo "magick doesn't seem to be installed (or not in PATH)." >&2
+  exit 3
+fi
+if ! command -v gifsicle >/dev/null 2>&1; then
+  echo "gifsicle doesn't seem to be installed (or not in PATH)." >&2
+  exit 3
+fi
+
+WIDTH=$(magick "${IMAGE}[0]" -format "%w" info:)
+HEIGHT=$(magick "${IMAGE}[0]" -format "%h" info:)
+
+if ((WIDTH % 64 != 0)); then
+  echo "Input width must be divisible by 64 (was ${WIDTH})." >&2
+  exit 1
+fi
+if ((HEIGHT % 64 != 0)); then
+  echo "Input height must be divisible by 64 (was ${HEIGHT})." >&2
+  exit 1
+fi
+
+COLS=$((WIDTH / 64))
+ROWS=$((HEIGHT / 64))
+
+FILENAME=$(basename "$IMAGE")
+BASENAME="${FILENAME%.*}"
+OUTDIR="./${BASENAME}"
+mkdir -p "$OUTDIR"
+
+COMMAND=""
+for ((i = 0; i < ROWS; i++)); do
+  for ((j = 0; j < COLS; j++)); do
+    X_OFFSET=$((64 * j))
+    Y_OFFSET=$((64 * i))
+    EMOJI_NAME="${BASENAME}-${i}-${j}"
+    OUTFILE="${OUTDIR}/${EMOJI_NAME}.gif"
+
+    echo "Creating ${EMOJI_NAME}"
+
+    magick "${IMAGE}" -coalesce -repage 0x0 -crop 64x64+"$X_OFFSET"+"$Y_OFFSET" +repage "$OUTFILE" 2>/dev/null
+    gifsicle -O3 --colors 256 --lossy="$LOSSINESS" -o "$OUTFILE" "$OUTFILE" 2>/dev/null
+
+    COMMAND+=":$EMOJI_NAME:"
+  done
+  if ((i != ROWS - 1)); then
+    COMMAND+='\n'
+  fi
+done
+
+printf '\nSlackbot command:\n\n%s\n' "$COMMAND"
