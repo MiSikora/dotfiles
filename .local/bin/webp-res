@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+QUALITY=75
+
+usage="Create a set of WebP images from a provided image. Scripts assumes that the image is in xxxhdpi resolution.
+    -i  source image file
+    -q  compression factor for RGB channels between 0 and 100 (default is 75)"
+
+options=':i:q:'
+while getopts $options option; do
+  case "$option" in
+  i) IMAGE=$(realpath "$OPTARG") ;;
+  q) QUALITY=$OPTARG ;;
+  :)
+    printf "Missing argument for -%s\n\n" "$OPTARG" >&2
+    echo "$usage" >&2
+    exit 1
+    ;;
+  \?)
+    printf "Illegal option: -%s\n\n" "$OPTARG" >&2
+    echo "$usage" >&2
+    exit 1
+    ;;
+  esac
+done
+
+if ! command -v magick &>/dev/null; then
+  echo "magick doesn't seem to be installed (or not in PATH)." >&2
+  exit 3
+fi
+
+# Require source image file
+if [ ! -f "${IMAGE}" ]; then
+  echo "-i argument must be provided\n" >&2
+  echo "$usage" >&2
+  exit 1
+fi
+
+if ! ((QUALITY >= 0 && QUALITY <= 100)); then
+  echo "-q argument '${QUALITY}' must be a number between 0 and 100\n" >&2
+  echo "$usage" >&2
+  exit 1
+fi
+
+mkdir -p "./res/drawable-xxxhdpi"
+mkdir -p "./res/drawable-xxhdpi"
+mkdir -p "./res/drawable-xhdpi"
+mkdir -p "./res/drawable-hdpi"
+mkdir -p "./res/drawable-mdpi"
+mkdir -p "./res/drawable-ldpi"
+
+FILENAME=$(basename "$IMAGE" | cut -d. -f1)
+
+magick "${IMAGE}" -scale "100%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xxxhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "75%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xxhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "50%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "37.5%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-hdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "25%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-mdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "18.75%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-ldpi/$FILENAME.webp"
