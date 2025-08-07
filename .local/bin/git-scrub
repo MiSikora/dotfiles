@@ -4,3 +4,4 @@ set -euo pipefail
 git checkout "$(git trunk)" --quiet
 git fetch -p --quiet
 git branch -vv | rg ": gone]" | rg -v "\*" | awk '{ print $1; }' | xargs -r git branch -D
+git pull
