@@ -20,6 +20,7 @@ source "$ZDOTDIR/fzf.zsh"
 source "$XDG_CONFIG_HOME/secret/env"
 
 bindkey -s ^f "tmux_session\n"
+bindkey -s ^h "tmux_session $HOME\n"
 
 # Use correct git dir for dotfiles
 git() {
@@ -57,6 +58,3 @@ alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bund
 
 alias ls="lsd -A --group-directories-first"
 alias fzfa="atuin history list --cmd-only | fzf"
-
-alias tsc="tmux_session $XDG_CONFIG_HOME"
-alias tsh="tmux_session $HOME"
