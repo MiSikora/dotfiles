@@ -6,16 +6,17 @@ if [[ $# -eq 1 ]]; then
   selected=$1
 else
   selected=$(fd -t d -d 1 -E "*.git" . "$PROJECTS_DIR" | rg "^$PROJECTS_DIR/(.*)/$" -r '$1' | fzf --layout=reverse)
-  selected="$PROJECTS_DIR/$selected"
 fi
 
 if [[ -z $selected ]]; then
   exit 0
 fi
 
-if [[ "$selected" == "$XDG_CONFIG_HOME" ]]; then
-  selected_name="dotfiles"
-elif [[ "$selected" == "$HOME" ]]; then
+if [[ $# -ne 1 ]]; then
+  selected="$PROJECTS_DIR/$selected"
+fi
+
+if [[ "$selected" == "$HOME" ]]; then
   selected_name="home"
 else
   selected_name=$(basename "$selected" | tr . _)
