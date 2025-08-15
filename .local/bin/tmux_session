@@ -5,7 +5,7 @@ PROJECTS_DIR="$HOME/projects"
 if [[ $# -eq 1 ]]; then
   selected=$1
 else
-  selected=$(fd -t d -d 1 -E "*.git" . "$PROJECTS_DIR" | rg "^$PROJECTS_DIR/(.*)/$" -r '$1' | fzf)
+  selected=$(fd -t d -d 1 -E "*.git" . "$PROJECTS_DIR" | rg "^$PROJECTS_DIR/(.*)/$" -r '$1' | fzf --layout=reverse)
   selected="$PROJECTS_DIR/$selected"
 fi
 
