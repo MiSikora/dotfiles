@@ -1,5 +1,4 @@
 fzf/*
-jgit/*
 raycast/*
 tmux/plugins/*
 brewfile
@@ -9,8 +8,9 @@ karabiner/*
 pyenv/*
 rbenv/*
 nvim/lazy-lock.json
+nvm/*
+!nvm/packages
 zsh/*
 !zsh/.zshrc
 !zsh/.zprofile
 !.ignore
-!nvim/.stylua.toml

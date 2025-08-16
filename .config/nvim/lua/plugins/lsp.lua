@@ -12,7 +12,12 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require("lspconfig")
+
       lspconfig.bashls.setup({})
+      lspconfig.cssls.setup({})
+      lspconfig.eslint.setup({})
+      lspconfig.html.setup({})
+      lspconfig.jsonls.setup({})
       lspconfig.lua_ls.setup({
         settings = {
           Lua = {
@@ -21,6 +26,7 @@ return {
           },
         },
       })
+      lspconfig.yamlls.setup({})
     end,
   },
   {
@@ -30,8 +36,16 @@ return {
       local conform = require("conform")
       conform.setup({
         formatters_by_ft = {
+          javascript = { "prettier" },
+          javascriptreact = { "prettier" },
+          json = { "prettier" },
+          jsonc = { "prettier" },
           lua = { "stylua" },
+          markdown = { "prettier" },
+          scss = { "prettier" },
           sh = { "shfmt" },
+          typescript = { "prettier" },
+          typescriptreact = { "prettier" },
           ["_"] = { "trim_whitespace", "trim_newlines" },
         },
         format_on_save = {
@@ -40,5 +54,16 @@ return {
         },
       })
     end,
+  },
+  {
+    "saghen/blink.cmp",
+    event = "InsertEnter",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    version = "1.*",
+    opts = {
+      completion = {
+        documentation = { auto_show = true },
+      },
+    },
   },
 }
