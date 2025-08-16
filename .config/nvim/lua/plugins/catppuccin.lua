@@ -4,12 +4,9 @@ return {
   lazy = false,
   priority = 1000,
   config = function()
+    ---@diagnostic disable-next-line: missing-fields
     require("catppuccin").setup({
       flavour = "mocha",
-      float = {
-        transparent = false,
-        solid = false,
-      },
     })
     vim.cmd.colorscheme("catppuccin")
   end,
