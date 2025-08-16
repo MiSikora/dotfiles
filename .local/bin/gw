@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-_gradle_wrapper="$(upfind gradlew)" || {
+gradle_wrapper="$(upfind gradlew)" || {
   exit 1
 }
-
-# Execute the Gradle wrapper
-exec "$_gradle_wrapper" "$@"
+exec "$gradle_wrapper" "$@"
