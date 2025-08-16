@@ -5,18 +5,18 @@
 [core]
 	autocrlf = input
 	pager = delta
-        editor = nvim
+	editor = nvim
 [init]
 	defaultBranch = trunk
 [commit]
-        gpgsign = true
+	gpgsign = true
 [credential]
 	helper = osxkeychain
 [interactive]
 	diffFilter = delta --color-only
 [delta]
 	navigate = true
-        side-by-side = true
+	side-by-side = true
 [merge]
 	conflictStyle = zdiff3
 [filter "lfs"]
