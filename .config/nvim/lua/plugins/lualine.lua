@@ -13,6 +13,7 @@ return {
         refresh = {
           statusline = 8,
         },
+        disabled_filetypes = { "no-neck-pain" },
       },
       sections = {
         lualine_b = {
