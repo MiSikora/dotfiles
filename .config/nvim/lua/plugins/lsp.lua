@@ -38,7 +38,7 @@ return {
           end
 
           map("grn", vim.lsp.buf.rename, "Rename")
-          map("gra", vim.lsp.buf.code_action, "Open Code Action")
+          map("gra", require("tiny-code-action").code_action, "Open Code Action")
           map("gO", telescope.lsp_document_symbols, "Open Document Symbols")
           map("gW", telescope.lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
           map("grr", telescope.lsp_references, "[G]oto [R]eferences")
