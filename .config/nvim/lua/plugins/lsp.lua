@@ -34,7 +34,12 @@ return {
           local telescope = require("telescope.builtin")
 
           local map = function(keys, func, desc)
-            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+            vim.keymap.set("n", keys, func, {
+              buffer = event.buf,
+              desc = "LSP: " .. desc,
+              noremap = true,
+              silent = true,
+            })
           end
 
           map("grn", vim.lsp.buf.rename, "Rename")
