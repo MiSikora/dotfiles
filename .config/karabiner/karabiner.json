@@ -24,7 +24,7 @@
                         ]
                     },
                     {
-                        "description": "Tab to Mash when held",
+                        "description": "Tab to Meta when held",
                         "manipulators": [
                             {
                                 "from": {
@@ -53,10 +53,10 @@
                                         "type": "frontmost_application_if"
                                     }
                                 ],
-                                "description": "Firfox cycle tab left with Ctrl+[",
+                                "description": "Firfox cycle tab left with Meta+[",
                                 "from": {
                                     "key_code": "open_bracket",
-                                    "modifiers": { "mandatory": ["left_control"] }
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_command"] }
                                 },
                                 "to": [
                                     {
@@ -75,10 +75,10 @@
                                         "type": "frontmost_application_if"
                                     }
                                 ],
-                                "description": "Firfox cycle tab right with Ctrl+]",
+                                "description": "Firfox cycle tab right with Meta+]",
                                 "from": {
                                     "key_code": "close_bracket",
-                                    "modifiers": { "mandatory": ["left_control"] }
+                                    "modifiers": { "mandatory": ["left_control", "left_option", "left_command"] }
                                 },
                                 "to": [
                                     {
