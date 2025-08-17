@@ -16,6 +16,10 @@ if [[ $# -ne 1 ]]; then
   selected="$PROJECTS_DIR/$selected"
 fi
 
+if [[ ! -d $selected ]]; then
+  exit 0
+fi
+
 if [[ "$selected" == "$HOME" ]]; then
   selected_name="home"
 else
@@ -24,16 +28,16 @@ fi
 
 tmux_running=$(pgrep tmux)
 
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+if [[ -z $TMUX && -z $tmux_running ]]; then
   exec tmux new -s "$selected_name" -c "$selected"
 fi
 
 if ! tmux has -t="$selected_name" 2>/dev/null; then
-  tmux new -ds "$selected_name" -c "$selected"
+  tmux new -d -s "$selected_name" -c "$selected"
 fi
 
 if [[ -n $TMUX ]]; then
   tmux switchc -t "$selected_name"
 else
-  exec tmux attach -d -t "$selected_name" -c "$selected"
+  exec tmux attach -t "$selected_name"
 fi
