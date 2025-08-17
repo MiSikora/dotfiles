@@ -8,6 +8,10 @@ vim.o.termguicolors = true
 -- Share clipboard with the '+' register
 vim.o.clipboard = "unnamedplus"
 
+-- Disable swapfile and persist undofile
+vim.o.swapfile = false
+vim.o.undofile = true
+
 -- Use an indentation of 2 spaces
 vim.o.tabstop = 2
 vim.o.softtabstop = 2
