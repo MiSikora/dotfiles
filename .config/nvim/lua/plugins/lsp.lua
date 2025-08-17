@@ -58,11 +58,36 @@ return {
   {
     "saghen/blink.cmp",
     event = "InsertEnter",
-    dependencies = { "rafamadriz/friendly-snippets" },
     version = "1.*",
+    dependencies = {
+      {
+        "L3MON4D3/LuaSnip",
+        version = "2.*",
+        build = (function()
+          return "make install_jsregexp"
+        end)(),
+        dependencies = {
+          {
+            "rafamadriz/friendly-snippets",
+            config = function()
+              require("luasnip.loaders.from_vscode").lazy_load()
+            end,
+          },
+        },
+        opts = {},
+      },
+      "folke/lazydev.nvim",
+    },
     opts = {
       completion = {
         documentation = { auto_show = true },
+      },
+
+      sources = {
+        default = { "lsp", "path", "snippets", "lazydev" },
+        providers = {
+          lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+        },
       },
     },
   },
