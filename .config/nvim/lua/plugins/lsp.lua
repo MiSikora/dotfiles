@@ -27,6 +27,38 @@ return {
         },
       })
       lspconfig.yamlls.setup({})
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("mehow/lsp-attach", { clear = true }),
+        callback = function(event)
+          local telescope = require("telescope.builtin")
+
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+          end
+
+          map("grn", vim.lsp.buf.rename, "Rename")
+          map("gra", vim.lsp.buf.code_action, "Open Code Action")
+          map("gO", telescope.lsp_document_symbols, "Open Document Symbols")
+          map("gW", telescope.lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+          map("grr", telescope.lsp_references, "[G]oto [R]eferences")
+          map("gri", telescope.lsp_implementations, "[G]oto [I]mplementation")
+          map("grd", telescope.lsp_definitions, "[G]oto [D]efinition")
+          map("grt", telescope.lsp_type_definitions, "[G]oto [T]ype Definition")
+          map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+
+          local diagnostic_jump = function(count, severity)
+            return function()
+              vim.diagnostic.jump({ count = count, severity = severity })
+            end
+          end
+
+          map("[d", diagnostic_jump(-1), "Previous Diagnostic")
+          map("]d", diagnostic_jump(1), "Next Diagnostic")
+          map("[e", diagnostic_jump(-1, vim.diagnostic.severity.ERROR), "Previous Error")
+          map("]e", diagnostic_jump(1, vim.diagnostic.severity.ERROR), "Next Error")
+        end,
+      })
     end,
   },
   {
