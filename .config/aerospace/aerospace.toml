@@ -32,7 +32,7 @@ accordion-padding = 24
     # - Arrows.         left, down, up, right
     # All possible modifiers: cmd, alt, ctrl, shift
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
-    
+
     # Change workspace
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
     ctrl-alt-cmd-shift-1 = "workspace 1"
@@ -210,4 +210,3 @@ accordion-padding = 24
 [[on-window-detected]]
     if.app-id = "com.1password.1password"
     run = "layout floating"
-
