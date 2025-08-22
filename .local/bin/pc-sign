@@ -11,9 +11,15 @@ while getopts ":u:p:" opt; do
   p)
     password="$OPTARG"
     ;;
+  *)
+    echo "Invalid flag $opt"
+    exit 1
+    ;;
   esac
 done
 
+adb-all shell input keyevent 61
+adb-all shell input keyevent 61
 adb-all shell input text "$username"
 adb-all shell input keyevent 61
 adb-all shell input text "$password"
