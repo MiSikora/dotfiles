@@ -11,14 +11,13 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local lspconfig = require("lspconfig")
-
-      lspconfig.bashls.setup({})
-      lspconfig.cssls.setup({})
-      lspconfig.eslint.setup({})
-      lspconfig.html.setup({})
-      lspconfig.jsonls.setup({})
-      lspconfig.lua_ls.setup({
+      vim.lsp.enable("bashls")
+      vim.lsp.enable("cssls")
+      vim.lsp.enable("eslint")
+      vim.lsp.enable("html")
+      vim.lsp.enable("jsonls")
+      vim.lsp.enable("lua_ls")
+      vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
             -- Using stylua for formatting
@@ -26,7 +25,8 @@ return {
           },
         },
       })
-      lspconfig.yamlls.setup({})
+      vim.lsp.enable("tsgo")
+      vim.lsp.enable("yamlls")
 
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("mehow/lsp-attach", { clear = true }),

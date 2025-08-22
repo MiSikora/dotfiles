@@ -1,3 +1,4 @@
 bash-language-server
+@typescript/native-preview
 vscode-langservers-extracted
 yaml-language-server
