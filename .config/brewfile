@@ -44,6 +44,8 @@ brew "lsd"
 brew "lua-language-server"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Command-line interface for SQLite
+brew "sqlite"
 # Manage multiple Node.js versions
 brew "nvm"
 # Theme for zsh
@@ -62,10 +64,10 @@ brew "shellcheck"
 brew "shfmt"
 # Simple keystroke visualizer
 brew "showkey"
-# Command-line interface for SQLite
-brew "sqlite"
 # Opinionated Lua code formatter
 brew "stylua"
+# Nodejs-based tool for optimizing SVG vector graphics files
+brew "svgo"
 # Simplified and community-driven man pages
 brew "tldr"
 # Terminal multiplexer
