@@ -1,3 +1,4 @@
+tap "automattic/build-tools"
 tap "buo/cask-upgrade"
 tap "graalvm/tap"
 tap "mdogan/zulu"
@@ -82,6 +83,8 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
+# A multi-language code generation tool for type-safe event tracking.
+brew "automattic/build-tools/event-horizon"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # AeroSpace is an i3-like tiling window manager for macOS
