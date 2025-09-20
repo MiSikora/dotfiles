@@ -133,6 +133,8 @@ cask "shottr"
 cask "slack"
 # Music streaming service
 cask "spotify"
+# Video game digital distribution service
+cask "steam"
 # Multimedia player
 cask "vlc"
 # Native desktop client for WhatsApp
