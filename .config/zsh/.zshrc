@@ -34,8 +34,8 @@ git() {
 }
 
 # Setup default Java versions
-source <(jdk 21 graal)
-source <(jdk 21)
+source <(jdk 25 graal)
+source <(jdk 25)
 
 # Make JDK shell function to set env variables
 jdk() {

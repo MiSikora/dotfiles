@@ -108,6 +108,7 @@ cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 cask "graalvm-jdk21"
+cask "graalvm-jdk25"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
 # Keyboard customiser
@@ -140,3 +141,4 @@ cask "whatsapp"
 cask "zoom"
 cask "zulu-jdk17"
 cask "zulu-jdk21"
+cask "zulu-jdk25"

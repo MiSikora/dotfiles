@@ -20,3 +20,6 @@ confirm-close-surface = false
 
 # Global terminal
 keybind = global:ctrl+option+space=toggle_quick_terminal
+quick-terminal-position = right
+quick-terminal-size = 50%
+quick-terminal-animation-duration = 0
