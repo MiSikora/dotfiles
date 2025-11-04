@@ -55,7 +55,7 @@ export PATH="$HOMEBREW_PREFIX/opt/bash/bin:$PATH"
 export LESS='-R --mouse'
 
 alias bdump="brew bundle --global --force --describe dump"
-alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
+alias bsync="sudo -v && brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
 
 alias ls="lsd -A --group-directories-first"
 alias fzfa="atuin history list --cmd-only | fzf"
