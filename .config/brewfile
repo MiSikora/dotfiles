@@ -99,8 +99,6 @@ cask "affinity-publisher"
 cask "android-commandlinetools"
 # Android SDK component
 cask "android-platform-tools"
-# Cross-platform Text Expander written in Rust
-cask "espanso"
 # Collaborative team software
 cask "figma"
 # Web browser
