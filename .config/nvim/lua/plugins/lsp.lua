@@ -80,6 +80,7 @@ return {
           jsonc = { "prettier" },
           lua = { "stylua" },
           markdown = { "prettier" },
+          rust = { "rustfmt" },
           scss = { "prettier" },
           sh = { "shfmt" },
           typescript = { "prettier" },
