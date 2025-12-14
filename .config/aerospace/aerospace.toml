@@ -214,3 +214,7 @@ accordion-padding = 24
 [[on-window-detected]]
     if.app-id = "com.apple.finder"
     run = "layout floating"
+
+[[on-window-detected]]
+    if.app-id = "com.obsproject.obs-studio"
+    run = "layout floating"

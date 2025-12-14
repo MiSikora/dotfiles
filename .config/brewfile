@@ -3,6 +3,10 @@ tap "buo/cask-upgrade"
 tap "graalvm/tap"
 tap "mdogan/zulu"
 tap "nikitabobko/tap"
+# Distributed revision control system
+brew "git"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -25,15 +29,13 @@ brew "ffmpeg"
 brew "fzf"
 # GIF image/animation creator/editor
 brew "gifsicle"
-# Distributed revision control system
-brew "git"
 # Enable transparent encryption/decryption of files in a git repo
 brew "git-crypt"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # Git extension for versioning large files
 brew "git-lfs"
-# GNU Pretty Good Privacy (PGP) package
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
@@ -77,6 +79,8 @@ brew "tldr"
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Command-line client for WebSockets
+brew "websocat"
 # Internet file retriever
 brew "wget"
 # UNIX shell (command interpreter)
