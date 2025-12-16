@@ -163,8 +163,9 @@ accordion-padding = 24
 
 # [M]essaging
 
+# Safari as a Messenger wrapper.
 [[on-window-detected]]
-    if.app-id = "com.facebook.archon.developerID"
+    if.app-id = "com.apple.Safari"
     run = ["move-node-to-workspace M"]
 
 [[on-window-detected]]

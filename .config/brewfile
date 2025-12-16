@@ -73,8 +73,6 @@ brew "showkey"
 brew "stylua"
 # Nodejs-based tool for optimizing SVG vector graphics files
 brew "svgo"
-# Simplified and community-driven man pages
-brew "tldr"
 # Terminal multiplexer
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
@@ -121,8 +119,6 @@ cask "karabiner-elements"
 cask "linear-linear"
 # Media key forwarder for iTunes and Spotify
 cask "macmediakeyforwarder"
-# Native desktop app for Messenger (formerly Facebook Messenger)
-cask "messenger"
 # VPN client
 cask "mullvad-vpn"
 # Open-source software for live streaming and screen recording
