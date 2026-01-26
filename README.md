@@ -38,7 +38,7 @@ sh ~/.config/setup/macos.sh
 - Espanso
 - JetBrains Toolbox
 - Capture One
-- Affinity Suite
+- Affinity
 - Email
 - Calendar
 - Messages

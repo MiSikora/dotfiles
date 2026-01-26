@@ -23,7 +23,7 @@ brew "curl"
 brew "exiftool"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# Play, record, convert, and stream audio and video
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
@@ -37,7 +37,7 @@ brew "git-delta"
 brew "git-lfs"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
-# Tools and libraries to manipulate images in many formats
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # JQ clone focussed on correctness, speed, and simplicity
 brew "jaq"
@@ -92,13 +92,9 @@ brew "automattic/build-tools/event-horizon"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
-# Professional graphic design software
-cask "affinity-designer"
-# Professional image editing software
-cask "affinity-photo"
-# Professional desktop publishing software
-cask "affinity-publisher"
+cask "nikitabobko/tap/aerospace"
+# Image editing and design software
+cask "affinity"
 # Command-line tools for building and debugging Android apps
 cask "android-commandlinetools"
 # Android SDK component
@@ -109,8 +105,8 @@ cask "figma"
 cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-cask "graalvm-jdk21"
-cask "graalvm-jdk25"
+cask "graalvm/tap/graalvm-jdk21"
+cask "graalvm/tap/graalvm-jdk25"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
 # Keyboard customiser
@@ -135,6 +131,8 @@ cask "slack"
 cask "spotify"
 # Video game digital distribution service
 cask "steam"
+# Open-source BitTorrent client
+cask "transmission"
 # Multimedia player
 cask "vlc"
 # Native desktop client for WhatsApp
@@ -142,8 +140,8 @@ cask "whatsapp"
 # Video communication and virtual meeting platform
 cask "zoom"
 # OpenJDK distribution from Azul
-cask "zulu-jdk17"
+cask "mdogan/zulu/zulu-jdk17"
 # OpenJDK distribution from Azul
-cask "zulu-jdk21"
+cask "mdogan/zulu/zulu-jdk21"
 # OpenJDK distribution from Azul
-cask "zulu-jdk25"
+cask "mdogan/zulu/zulu-jdk25"
