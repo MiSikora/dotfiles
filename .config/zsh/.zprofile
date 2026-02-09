@@ -37,3 +37,5 @@ export NVM_DIR="$HOME/.nvm"
 
 # Initialize Rust
 source "$HOME/.cargo/env"
+
+export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
