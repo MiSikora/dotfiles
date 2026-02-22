@@ -18,6 +18,12 @@ export DOTFILES_GIT="$HOME/projects/dotfiles.git"
 # Configure Android's SDK to run builds without the need for local.properties
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 
+# Use config dir for Bartib
+export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
+
+# Source private environment variables
+source "$XDG_CONFIG_HOME/secret/env"
+
 # Homebrew variables
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -37,5 +43,3 @@ export NVM_DIR="$HOME/.nvm"
 
 # Initialize Rust
 source "$HOME/.cargo/env"
-
-export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
