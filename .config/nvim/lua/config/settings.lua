@@ -42,11 +42,11 @@ vim.o.relativenumber = true
 -- Show sign column
 vim.o.signcolumn = "yes"
 
--- Do not wrap long lines
-vim.o.wrap = false
+-- Wrap long lines
+vim.o.wrap = true
 
--- Keep current line in the center
-vim.o.scrolloff = 999
+-- Keeps lines of context above/below the cursor while scrolling
+vim.o.scrolloff = 10
 
 -- Show vertical guide line
 vim.o.colorcolumn = "141"
