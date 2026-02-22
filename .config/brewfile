@@ -101,6 +101,8 @@ cask "affinity"
 cask "android-commandlinetools"
 # Android SDK component
 cask "android-platform-tools"
+# OpenAI's official ChatGPT desktop app
+cask "chatgpt"
 # Collaborative team software
 cask "figma"
 # Web browser

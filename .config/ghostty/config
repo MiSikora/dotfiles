@@ -2,7 +2,7 @@ theme = catppuccin-mocha.conf
 
 # Use p10k recommended font
 font-family = "MesloLGS NF"
-font-size = 16
+font-size = 20
 
 # Disable ligatures
 font-feature = -calt
@@ -21,5 +21,5 @@ confirm-close-surface = false
 # Global terminal
 keybind = global:ctrl+option+space=toggle_quick_terminal
 quick-terminal-position = right
-quick-terminal-size = 50%
+quick-terminal-size = 75%
 quick-terminal-animation-duration = 0

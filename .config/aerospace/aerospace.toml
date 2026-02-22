@@ -146,9 +146,9 @@ accordion-padding = 24
     if.app-id = "org.mozilla.firefox"
     run = ["move-node-to-workspace B"]
 
-# [C]alendar
+# [C]hat GPT
 [[on-window-detected]]
-    if.app-id = "com.apple.iCal"
+    if.app-id = "com.openai.chat"
     run = ["move-node-to-workspace C"]
 
 # [I]DE
@@ -163,7 +163,7 @@ accordion-padding = 24
 
 # [M]essaging
 
-# Safari as a Messenger wrapper.
+# Safari as a Messenger wrapper
 [[on-window-detected]]
     if.app-id = "com.apple.Safari"
     run = ["move-node-to-workspace M"]
