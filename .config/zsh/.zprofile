@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-# Install Homebrew's casks in global applications and skip Gatekeeper
-export HOMEBREW_CASK_OPTS="--appdir=/Applications --no_quarantine: true"
+# Install Homebrew's casks in global applications
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Use config dir for Homebrew
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
