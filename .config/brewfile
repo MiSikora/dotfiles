@@ -41,6 +41,8 @@ brew "git-lfs"
 brew "gnupg"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# Dex to Java decompiler
+brew "jadx"
 # JQ clone focussed on correctness, speed, and simplicity
 brew "jaq"
 # Clone of ls with colorful output, file type icons, and more
@@ -53,6 +55,8 @@ brew "neovim"
 brew "sqlite"
 # Manage multiple Node.js versions
 brew "nvm"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
 # Theme for zsh
 brew "powerlevel10k"
 # Python version management
