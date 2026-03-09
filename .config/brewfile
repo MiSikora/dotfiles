@@ -3,8 +3,6 @@ tap "buo/cask-upgrade"
 tap "graalvm/tap"
 tap "mdogan/zulu"
 tap "nikitabobko/tap"
-# Distributed revision control system
-brew "git"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
 # Improved shell history for zsh, bash, fish and nushell
@@ -31,6 +29,8 @@ brew "ffmpeg"
 brew "fzf"
 # GIF image/animation creator/editor
 brew "gifsicle"
+# Distributed revision control system
+brew "git"
 # Enable transparent encryption/decryption of files in a git repo
 brew "git-crypt"
 # Syntax-highlighting pager for git and diff output
@@ -109,6 +109,8 @@ cask "android-platform-tools"
 cask "chatgpt"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
+# Cross-platform Text Expander written in Rust
+cask "espanso"
 # Collaborative team software
 cask "figma"
 # Web browser
@@ -129,6 +131,8 @@ cask "macmediakeyforwarder"
 cask "mullvad-vpn"
 # Open-source software for live streaming and screen recording
 cask "obs"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # Podcast platform
 cask "pocket-casts"
 # Control your tools with a few keystrokes

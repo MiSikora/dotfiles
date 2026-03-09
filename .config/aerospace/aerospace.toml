@@ -52,6 +52,7 @@ accordion-padding = 24
     ctrl-alt-cmd-shift-f = "workspace F"
     ctrl-alt-cmd-shift-i = "workspace I"
     ctrl-alt-cmd-shift-m = "workspace M"
+    ctrl-alt-cmd-shift-n = "workspace N"
     ctrl-alt-cmd-shift-s = "workspace S"
     ctrl-alt-cmd-shift-t = "workspace T"
 
@@ -84,6 +85,7 @@ accordion-padding = 24
     ctrl-alt-cmd-f = "move-node-to-workspace F"
     ctrl-alt-cmd-i = "move-node-to-workspace I"
     ctrl-alt-cmd-m = "move-node-to-workspace M"
+    ctrl-alt-cmd-n = "move-node-to-workspace N"
     ctrl-alt-cmd-s = "move-node-to-workspace S"
     ctrl-alt-cmd-t = "move-node-to-workspace T"
 
@@ -177,13 +179,11 @@ accordion-padding = 24
     run = ["move-node-to-workspace M"]
 
 # [E]mail
-
 [[on-window-detected]]
     if.app-id = "com.apple.mail"
     run = ["move-node-to-workspace E"]
 
 # [F]igma
-
 [[on-window-detected]]
     if.app-id = "com.figma.Desktop"
     run = ["move-node-to-workspace F"]
@@ -197,6 +197,11 @@ accordion-padding = 24
 [[on-window-detected]]
     if.app-id = "com.linear"
     run = ["move-node-to-workspace T"]
+
+# [N]otes
+[[on-window-detected]]
+    if.app-id = "md.obsidian"
+    run = ["move-node-to-workspace N"]
 
 # Floating windows
 
