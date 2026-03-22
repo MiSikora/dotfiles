@@ -18,9 +18,9 @@ source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZDOTDIR/fzf.zsh"
 
-bindkey -s ^f "tmux_session\n"
-bindkey -s ^h "tmux_session $HOME\n"
-bindkey -s ^n "nvim -c \"cd $XDG_CONFIG_HOME\" $XDG_CONFIG_HOME\n"
+bindkey -s ^f "tmux_session pick\n"
+bindkey -s ^h "tmux_session switch $HOME\n"
+bindkey -s ^n "tmux_session switch $XDG_CONFIG_HOME\n"
 
 # Use correct git dir for dotfiles
 git() {

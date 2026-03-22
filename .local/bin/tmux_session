@@ -1,49 +1,242 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 PROJECTS_DIR="$HOME/projects"
 
-if [[ $# -eq 1 ]]; then
-  selected=$1
-else
-  selected=$(
+_tmux_session_usage() {
+  printf '%s\n' \
+    'Usage:' \
+    '  tmux_session list' \
+    '    Print projects as label<TAB>absolute_path.' \
+    '  tmux_session pick' \
+    '    Open fzf and switch to the selected project session.' \
+    '  tmux_session switch <absolute-path>' \
+    '    Create or switch to the tmux session for a project path.'
+}
+
+_tmux_session_list() {
+  local entries=()
+  local sorted_entries
+
+  _tmux_session_add_entry() {
+    local label path
+
+    label=$1
+    path=$2
+
+    if [[ ! -d $path ]]; then
+      return 0
+    fi
+
+    entries+=("$label"$'\t'"$path")
+  }
+
+  if [[ ! -d $PROJECTS_DIR && ! -d $HOME/.config && ! -d $HOME/.local/bin ]]; then
+    return 0
+  fi
+
+  while IFS= read -r project_path; do
+    local label
+
+    if [[ -z $project_path ]]; then
+      continue
+    fi
+
+    project_path=${project_path%/}
+    label=$(_tmux_session_project_label "$project_path")
+
+    if [[ -n $label ]]; then
+      _tmux_session_add_entry "$label" "$project_path"
+    fi
+  done < <(
     {
-      fd -t d -d 1 -E "*.git" -E a8c . "$PROJECTS_DIR"
-      fd -t d -d 1 . "$PROJECTS_DIR/a8c"
-    } | rg "^$PROJECTS_DIR/(.*)/$" -r '$1' |
-      fzf --layout=reverse
+      if [[ -d $PROJECTS_DIR ]]; then
+        fd -t d -d 1 -E "*.git" -E a8c . "$PROJECTS_DIR" 2>/dev/null || true
+      fi
+
+      if [[ -d $PROJECTS_DIR/a8c ]]; then
+        fd -t d -d 1 . "$PROJECTS_DIR/a8c" 2>/dev/null || true
+      fi
+    }
   )
-fi
 
-if [[ -z $selected ]]; then
-  exit 0
-fi
+  _tmux_session_add_entry 'dotfiles-bin' "$HOME/.local/bin"
+  _tmux_session_add_entry 'dotfiles-config' "$HOME/.config"
+  _tmux_session_add_entry 'dotfiles-home' "$HOME"
 
-if [[ $# -ne 1 ]]; then
-  selected="$PROJECTS_DIR/$selected"
-fi
+  sorted_entries=$(
+    printf '%s\n' "${entries[@]}" | LC_ALL=C sort -f -t $'\t' -k1,1 -k2,2
+  )
 
-if [[ ! -d $selected ]]; then
-  exit 0
-fi
+  while IFS= read -r entry; do
+    if [[ -z $entry ]]; then
+      continue
+    fi
 
-if [[ "$selected" == "$HOME" ]]; then
-  selected_name="home"
-else
-  selected_name=$(basename "$selected" | tr . _)
-fi
+    printf '%s\n' "$entry"
+  done < <(printf '%s\n' "$sorted_entries")
+}
 
-tmux_running=$(pgrep tmux)
+_tmux_session_project_label() {
+  local selected_path
 
-if [[ -z $TMUX && -z $tmux_running ]]; then
-  exec tmux new -s "$selected_name" -c "$selected"
-fi
+  selected_path=$1
 
-if ! tmux has -t="$selected_name" 2>/dev/null; then
-  tmux new -d -s "$selected_name" -c "$selected"
-fi
+  if [[ $selected_path == "$HOME/.local/bin" ]]; then
+    printf 'dotfiles-bin\n'
+    return 0
+  fi
 
-if [[ -n $TMUX ]]; then
-  tmux switchc -t "$selected_name"
-else
-  exec tmux attach -t "$selected_name"
-fi
+  if [[ $selected_path == "$HOME/.config" ]]; then
+    printf 'dotfiles-config\n'
+    return 0
+  fi
+
+  if [[ $selected_path == "$HOME" ]]; then
+    printf 'dotfiles-home\n'
+    return 0
+  fi
+
+  if [[ $selected_path == "$PROJECTS_DIR"/* ]]; then
+    printf '%s\n' "${selected_path#"$PROJECTS_DIR"/}"
+  fi
+}
+
+_tmux_session_known_label() {
+  local selected_path entry label project_path canonical_path
+
+  selected_path=$1
+
+  while IFS= read -r entry; do
+    if [[ -z $entry ]]; then
+      continue
+    fi
+
+    label=${entry%%$'\t'*}
+    project_path=${entry#*$'\t'}
+    canonical_path=$(cd "$project_path" && pwd -P)
+
+    if [[ $canonical_path == "$selected_path" ]]; then
+      printf '%s\n' "$label"
+      return 0
+    fi
+  done < <(_tmux_session_list)
+}
+
+_tmux_session_sanitize_name() {
+  printf '%s' "$1" | tr '/.' '--' | tr -cs '[:alnum:]_-' '-'
+}
+
+_tmux_session_external_name() {
+  local canonical_path short_hash base_name sanitized_base
+
+  canonical_path=$1
+  short_hash=$(printf '%s' "$canonical_path" | shasum -a 256 | cut -c1-8)
+  base_name=$(basename "$canonical_path")
+  sanitized_base=$(_tmux_session_sanitize_name "$base_name")
+
+  printf 'ext-%s-%s\n' "${sanitized_base:-path}" "$short_hash"
+}
+
+_tmux_session_session_name() {
+  local selected_path label sanitized_label
+
+  selected_path=$1
+  label=$(_tmux_session_known_label "$selected_path")
+
+  if [[ -n $label ]]; then
+    sanitized_label=$(_tmux_session_sanitize_name "$label")
+    printf '%s\n' "${sanitized_label%-}"
+    return 0
+  fi
+
+  _tmux_session_external_name "$selected_path"
+}
+
+_tmux_session_switch() {
+  local selected_path canonical_path selected_name tmux_running
+
+  if [[ $# -ne 1 ]]; then
+    printf 'tmux_session switch requires exactly one path\n' >&2
+    return 1
+  fi
+
+  selected_path=$1
+
+  if [[ $selected_path != /* ]]; then
+    printf 'tmux_session switch requires an absolute path\n' >&2
+    return 1
+  fi
+
+  if [[ ! -d $selected_path ]]; then
+    printf 'tmux_session switch target is not a directory: %s\n' "$selected_path" >&2
+    return 1
+  fi
+
+  canonical_path=$(cd "$selected_path" && pwd -P)
+  selected_name=$(_tmux_session_session_name "$canonical_path")
+  tmux_running=$(pgrep tmux || true)
+
+  if [[ -z ${TMUX:-} && -z $tmux_running ]]; then
+    exec tmux new -s "$selected_name" -c "$canonical_path"
+  fi
+
+  if ! tmux has -t="$selected_name" 2>/dev/null; then
+    tmux new -d -s "$selected_name" -c "$canonical_path"
+  fi
+
+  if [[ -n ${TMUX:-} ]]; then
+    tmux switchc -t "$selected_name"
+  else
+    exec tmux attach -t "$selected_name"
+  fi
+}
+
+_tmux_session_pick() {
+  local selection selected_path
+
+  selection=$(_tmux_session_list | fzf --layout=reverse --delimiter=$'\t' --with-nth=1) || return 0
+  if [[ -z $selection ]]; then
+    return 0
+  fi
+
+  selected_path=${selection#*$'\t'}
+  _tmux_session_switch "$selected_path"
+}
+
+_tmux_session_main() {
+  if [[ $# -eq 0 ]]; then
+    _tmux_session_usage >&2
+    return 1
+  fi
+
+  case $1 in
+  list)
+    if [[ $# -ne 1 ]]; then
+      _tmux_session_usage >&2
+      return 1
+    fi
+    _tmux_session_list
+    ;;
+  pick)
+    if [[ $# -ne 1 ]]; then
+      _tmux_session_usage >&2
+      return 1
+    fi
+    _tmux_session_pick
+    ;;
+  switch)
+    if [[ $# -ne 2 ]]; then
+      _tmux_session_usage >&2
+      return 1
+    fi
+    _tmux_session_switch "$2"
+    ;;
+  *)
+    _tmux_session_usage >&2
+    return 1
+    ;;
+  esac
+}
+
+_tmux_session_main "$@"
