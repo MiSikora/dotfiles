@@ -15,20 +15,18 @@ _tmux_session_usage() {
 }
 
 _tmux_session_list() {
-  local entries=()
-  local sorted_entries
+  local project_entries=''
+  local a8c_entries=''
+  local dotfiles_entries=''
 
-  _tmux_session_add_entry() {
-    local label path
+  _tmux_session_print_entries() {
+    local source_entries=$1
 
-    label=$1
-    path=$2
-
-    if [[ ! -d $path ]]; then
+    if [[ -z $source_entries ]]; then
       return 0
     fi
 
-    entries+=("$label"$'\t'"$path")
+    printf '%s' "$source_entries" | sort -f -t $'\t' -k1,1 -k2,2
   }
 
   if [[ ! -d $PROJECTS_DIR && ! -d $HOME/.config && ! -d $HOME/.local/bin ]]; then
@@ -43,10 +41,19 @@ _tmux_session_list() {
     fi
 
     project_path=${project_path%/}
-    label=$(_tmux_session_project_label "$project_path")
+    if [[ ! -d $project_path ]]; then
+      continue
+    fi
 
-    if [[ -n $label ]]; then
-      _tmux_session_add_entry "$label" "$project_path"
+    label=$(_tmux_session_project_label "$project_path")
+    if [[ -z $label ]]; then
+      continue
+    fi
+
+    if [[ $project_path == "$PROJECTS_DIR/a8c/"* ]]; then
+      a8c_entries+="$label"$'\t'"$project_path"$'\n'
+    else
+      project_entries+="$label"$'\t'"$project_path"$'\n'
     fi
   done < <(
     {
@@ -60,52 +67,48 @@ _tmux_session_list() {
     }
   )
 
-  _tmux_session_add_entry 'dotfiles-bin' "$HOME/.local/bin"
-  _tmux_session_add_entry 'dotfiles-config' "$HOME/.config"
-  _tmux_session_add_entry 'dotfiles-home' "$HOME"
+  if [[ -d $HOME/.local/bin ]]; then
+    dotfiles_entries+='dotfiles-bin'$'\t'"$HOME/.local/bin"$'\n'
+  fi
 
-  sorted_entries=$(
-    printf '%s\n' "${entries[@]}" | LC_ALL=C sort -f -t $'\t' -k1,1 -k2,2
-  )
+  if [[ -d $HOME/.config ]]; then
+    dotfiles_entries+='dotfiles-config'$'\t'"$HOME/.config"$'\n'
+  fi
 
-  while IFS= read -r entry; do
-    if [[ -z $entry ]]; then
-      continue
-    fi
+  if [[ -d $HOME ]]; then
+    dotfiles_entries+='dotfiles-home'$'\t'"$HOME"$'\n'
+  fi
 
-    printf '%s\n' "$entry"
-  done < <(printf '%s\n' "$sorted_entries")
+  _tmux_session_print_entries "$project_entries"
+  _tmux_session_print_entries "$a8c_entries"
+  _tmux_session_print_entries "$dotfiles_entries"
 }
 
 _tmux_session_project_label() {
-  local selected_path
+  local selected_path=$1
 
-  selected_path=$1
-
-  if [[ $selected_path == "$HOME/.local/bin" ]]; then
-    printf 'dotfiles-bin\n'
-    return 0
-  fi
-
-  if [[ $selected_path == "$HOME/.config" ]]; then
-    printf 'dotfiles-config\n'
-    return 0
-  fi
-
-  if [[ $selected_path == "$HOME" ]]; then
-    printf 'dotfiles-home\n'
-    return 0
-  fi
-
-  if [[ $selected_path == "$PROJECTS_DIR"/* ]]; then
-    printf '%s\n' "${selected_path#"$PROJECTS_DIR"/}"
-  fi
+  case $selected_path in
+  "$HOME/.local/bin")
+    echo 'dotfiles-bin'
+    ;;
+  "$HOME/.config")
+    echo 'dotfiles-config'
+    ;;
+  "$HOME")
+    echo 'dotfiles-home'
+    ;;
+  "$PROJECTS_DIR"/*)
+    echo "${selected_path#"$PROJECTS_DIR"/}"
+    ;;
+  esac
 }
 
 _tmux_session_known_label() {
-  local selected_path entry label project_path canonical_path
-
-  selected_path=$1
+  local selected_path=$1
+  local entry
+  local label
+  local project_path
+  local canonical_path
 
   while IFS= read -r entry; do
     if [[ -z $entry ]]; then
@@ -117,36 +120,39 @@ _tmux_session_known_label() {
     canonical_path=$(cd "$project_path" && pwd -P)
 
     if [[ $canonical_path == "$selected_path" ]]; then
-      printf '%s\n' "$label"
+      echo "$label"
       return 0
     fi
   done < <(_tmux_session_list)
 }
 
 _tmux_session_sanitize_name() {
-  printf '%s' "$1" | tr '/.' '--' | tr -cs '[:alnum:]_-' '-'
+  echo -n "$1" | tr '/.' '--' | tr -cs '[:alnum:]_-' '-'
 }
 
 _tmux_session_external_name() {
-  local canonical_path short_hash base_name sanitized_base
+  local canonical_path=$1
+  local short_hash
+  local base_name
+  local sanitized_base
 
-  canonical_path=$1
   short_hash=$(printf '%s' "$canonical_path" | shasum -a 256 | cut -c1-8)
   base_name=$(basename "$canonical_path")
   sanitized_base=$(_tmux_session_sanitize_name "$base_name")
 
-  printf 'ext-%s-%s\n' "${sanitized_base:-path}" "$short_hash"
+  echo "ext-${sanitized_base:-path}-$short_hash"
 }
 
 _tmux_session_session_name() {
-  local selected_path label sanitized_label
+  local selected_path=$1
+  local label
+  local sanitized_label
 
-  selected_path=$1
   label=$(_tmux_session_known_label "$selected_path")
 
   if [[ -n $label ]]; then
     sanitized_label=$(_tmux_session_sanitize_name "$label")
-    printf '%s\n' "${sanitized_label%-}"
+    echo "${sanitized_label%-}"
     return 0
   fi
 
@@ -154,14 +160,15 @@ _tmux_session_session_name() {
 }
 
 _tmux_session_switch() {
-  local selected_path canonical_path selected_name tmux_running
-
   if [[ $# -ne 1 ]]; then
     printf 'tmux_session switch requires exactly one path\n' >&2
     return 1
   fi
 
-  selected_path=$1
+  local selected_path=$1
+  local canonical_path
+  local selected_name
+  local tmux_running
 
   if [[ $selected_path != /* ]]; then
     printf 'tmux_session switch requires an absolute path\n' >&2
@@ -193,7 +200,8 @@ _tmux_session_switch() {
 }
 
 _tmux_session_pick() {
-  local selection selected_path
+  local selection
+  local selected_path
 
   selection=$(_tmux_session_list | fzf --layout=reverse --delimiter=$'\t' --with-nth=1) || return 0
   if [[ -z $selection ]]; then
