@@ -4,15 +4,19 @@ set -e
 # Based on: https://github.com/mathiasbynens/dotfiles/blob/c886e139233320e29fd882960ba3dd388d57afd7/.macos
 # Also see: https://macos-defaults.com
 
-# Close any open System Preferences panes, to prevent them from overriding
+# Close any open System Settings panes, to prevent them from overriding
 # settings we’re about to change
-osascript -e 'tell application "System Preferences" to quit'
+osascript -e 'tell application "System Settings" to quit' >/dev/null 2>&1 || true
 
 # Ask for the administrator password upfront
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+  sudo -n true
+  sleep 60
+  kill -0 "$$" || exit
+done 2>/dev/null &
 
 ###############################################################################
 # General UI/UX                                                               #
@@ -43,9 +47,6 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Disable automatic termination of inactive apps
 defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
-
-# Disable Notification Center and remove the menu bar icon
-launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
 
 # Disable automatic capitalization as it’s annoying when typing code
 defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
@@ -87,8 +88,18 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write -g InitialKeyRepeat -int 10
 defaults write -g KeyRepeat -int 1
 
+# Disable trackpad "More Gestures" while keeping regular pointer behavior
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 0
+defaults write NSGlobalDomain AppleEnableSwipeNavigateWithScrolls -bool false
+
 # Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en"
+defaults write NSGlobalDomain AppleLanguages -array "en-US"
 defaults write NSGlobalDomain AppleLocale -string "en_US@currency=EUR"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
@@ -100,9 +111,6 @@ defaults write com.apple.HIToolbox AppleSelectedInputSources -array '<dict><key>
 
 # Hide language menu from the top right corner of the boot screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool false
-
-# Stop iTunes from responding to the keyboard media keys
-launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
 
 # Use Fn keys by default
 defaults write NSGlobalDomain com.apple.keyboard.fnState -int 1
@@ -221,12 +229,6 @@ defaults write com.apple.dock expose-animation-duration -float 0
 # Don’t group windows by application in Mission Control
 defaults write com.apple.dock expose-group-by-app -bool false
 
-# Disable Dashboard
-defaults write com.apple.dashboard mcx-disabled -bool true
-
-# Don’t show Dashboard as a Space
-defaults write com.apple.dock dashboard-in-overlay -bool true
-
 # Don’t automatically rearrange Spaces based on most recent use
 defaults write com.apple.dock mru-spaces -bool false
 
@@ -320,3 +322,9 @@ defaults write com.apple.AdLib.plist allowApplePersonalizedAdvertising -bool fal
 defaults write com.apple.AdLib.plist allowIdentifierForAdvertising -bool false
 defaults write com.apple.AdLib.plist personalizedAdsMigrated -bool false
 
+# Restart affected services to apply changes immediately
+for app in Dock Finder SystemUIServer; do
+  killall "$app" >/dev/null 2>&1 || true
+done
+
+echo "Some changes may require logging out or restarting your Mac to take effect."
