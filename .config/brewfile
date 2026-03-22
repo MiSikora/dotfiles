@@ -1,3 +1,4 @@
+tap "anomalyco/tap"
 tap "automattic/build-tools"
 tap "buo/cask-upgrade"
 tap "graalvm/tap"
@@ -91,6 +92,8 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # A multi-language code generation tool for type-safe event tracking.
 brew "automattic/build-tools/event-horizon"
 # Password manager that keeps all passwords secure behind one password
@@ -105,8 +108,6 @@ cask "android-commandlinetools"
 cask "android-platform-tools"
 # OpenAI's official ChatGPT desktop app
 cask "chatgpt"
-# OpenAI's coding agent that runs in your terminal
-cask "codex"
 # Cross-platform Text Expander written in Rust
 cask "espanso"
 # Collaborative team software
