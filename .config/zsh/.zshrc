@@ -58,3 +58,9 @@ alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bund
 
 alias ls="lsd -A --group-directories-first --ignore-glob .DS_Store"
 alias fzfa="atuin history list --cmd-only | fzf"
+
+airlock() {
+  osascript -e 'tell application "AeroSpace" to quit' >/dev/null 2>&1 || true
+  pkill -x AeroSpace >/dev/null 2>&1 || true
+  open -a AeroSpace
+}
