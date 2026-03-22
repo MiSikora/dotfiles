@@ -56,5 +56,5 @@ export LESS='-R --mouse'
 alias bdump="brew bundle --global --force --describe dump"
 alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
 
-alias ls="lsd -A --group-directories-first"
+alias ls="lsd -A --group-directories-first --ignore-glob .DS_Store"
 alias fzfa="atuin history list --cmd-only | fzf"
