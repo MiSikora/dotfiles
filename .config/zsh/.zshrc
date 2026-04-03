@@ -18,6 +18,9 @@ source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZDOTDIR/fzf.zsh"
 
+# Allow Ctrl-S for fzf-git stashes
+[[ -t 0 ]] && stty -ixon
+
 bindkey -s ^f "tmux_session pick\n"
 bindkey -s ^h "tmux_session switch $HOME\n"
 bindkey -s ^n "tmux_session switch $XDG_CONFIG_HOME\n"
