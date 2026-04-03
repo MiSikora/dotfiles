@@ -12,9 +12,6 @@ export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
 # Use config dir for GnuPG
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
 
-# Use config dir for Codex
-export CODEX_HOME="$XDG_CONFIG_HOME/codex"
-
 # Keep dotfiles git structure in projects dir
 export DOTFILES_GIT="$HOME/projects/dotfiles.git"
 
