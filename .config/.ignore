@@ -13,4 +13,5 @@ nvm/*
 zsh/*
 !zsh/.zshrc
 !zsh/.zprofile
+!zsh/fzf.zsh
 !.ignore

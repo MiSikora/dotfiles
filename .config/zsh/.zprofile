@@ -1,45 +1,58 @@
 #!/usr/bin/env zsh
 
-# Install Homebrew's casks in global applications
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-
-# Use config dir for Homebrew
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
-
-# Use config dir for git
-export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
-
-# Use config dir for GnuPG
-export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
-
-# Keep dotfiles git structure in projects dir
-export DOTFILES_GIT="$HOME/projects/dotfiles.git"
-
-# Configure Android's SDK to run builds without the need for local.properties
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-
-# Use config dir for Bartib
-export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
-
-# Source private environment variables
-source "$XDG_CONFIG_HOME/secret/env"
-
-# Homebrew variables
+# Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Initialize Atuin
+# Homebrew casks
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
+# Homebrew config
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
+
+# Git config
+export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
+
+# GnuPG config
+export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
+
+# Dotfiles git
+export DOTFILES_GIT="$HOME/projects/dotfiles.git"
+
+# Android SDK
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+
+# Bartib config
+export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
+
+# Preferred tools
+typeset -U path PATH
+path=(
+  "$HOMEBREW_PREFIX/opt/bash/bin"
+  "$HOMEBREW_PREFIX/opt/sqlite/bin"
+  "$HOMEBREW_PREFIX/opt/curl/bin"
+  $path
+)
+
+# Java defaults
+source <(jdk 25 graal)
+source <(jdk 25)
+
+# Private environment
+[[ -r "$XDG_CONFIG_HOME/secret/env" ]] && source "$XDG_CONFIG_HOME/secret/env"
+
+# Atuin
 eval "$(atuin init zsh)"
 
-# Initialize rbenv
+# rbenv
 eval "$(rbenv init - --no-rehash zsh)"
 
-# Initialize pyenv
+# pyenv
 eval "$(pyenv init - zsh)"
 
-# Initialize nvm
+# nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 
-# Initialize Rust
-source "$HOME/.cargo/env"
+# Rust
+[[ -r "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"

@@ -14,6 +14,7 @@ source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
 
+# Interactive plugins
 source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZDOTDIR/fzf.zsh"
@@ -21,13 +22,21 @@ source "$ZDOTDIR/fzf.zsh"
 # Allow Ctrl-S for fzf-git stashes
 [[ -t 0 ]] && stty -ixon
 
+# Word navigation
+WORDCHARS=${WORDCHARS//[\/]}
+
+# Git delta
+export LESS='-R'
+
+# Shell keybindings
 bindkey -s ^f "tmux_session pick\n"
 bindkey -s ^h "tmux_session switch $HOME\n"
 bindkey -s ^n "tmux_session switch $XDG_CONFIG_HOME\n"
 
-# Use correct git dir for dotfiles
+# Dotfiles git
 git() {
-  current_dir=$PWD
+  local current_dir=$PWD
+
   if [[ "$current_dir" == "$HOME" || "$current_dir" == "$XDG_CONFIG_HOME"* ]]; then
     command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" "$@"
   else
@@ -35,35 +44,20 @@ git() {
   fi
 }
 
-# Setup default Java versions
-source <(jdk 25 graal)
-source <(jdk 25)
-
-# Make JDK shell function to set env variables
+# JDK helper
 jdk() {
   source <(command jdk "$@")
   java -version
 }
-
-# Treat slashes as word separators for navigation
-WORDCHARS=${WORDCHARS//[\/]}
-
-# Use installed programs before system ones
-export PATH="$HOMEBREW_PREFIX/opt/curl/bin:$PATH"
-export PATH="$HOMEBREW_PREFIX/opt/sqlite/bin:$PATH"
-export PATH="$HOMEBREW_PREFIX/opt/bash/bin:$PATH"
-
-# Enable mouse scroll in git-delta
-export LESS='-R --mouse'
-
-alias bdump="brew bundle --global --force --describe dump"
-alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
-
-alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
-alias fzfa="atuin history list --cmd-only | fzf"
 
 airlock() {
   osascript -e 'tell application "AeroSpace" to quit' >/dev/null 2>&1 || true
   pkill -x AeroSpace >/dev/null 2>&1 || true
   open -a AeroSpace
 }
+
+alias bdump="brew bundle --global --force --describe dump"
+alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
+
+alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
+alias fzfa="atuin history list --cmd-only | fzf"

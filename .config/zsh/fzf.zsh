@@ -1,12 +1,67 @@
 #!/usr/bin/env zsh
 
-# Initialize fzf 
+# Fzf init
 source <(fzf --zsh)
 source "$XDG_CONFIG_HOME/fzf/fzf-git/fzf-git.sh"
 
-# Rebind ctrl+r to use Atuin instead of fzf 
+# Fzf-git without tmux popups
+_fzf_git_fzf() {
+  fzf --height 50% \
+    --layout reverse --multi --min-height 20+ --border \
+    --no-separator --header-border horizontal \
+    --border-label-pos 2 \
+    --color 'label:blue' \
+    --preview-window 'right,50%' --preview-border line \
+    --bind 'ctrl-/:change-preview-window(down,50%|hidden|)' "$@"
+}
+
+# Dotfiles repo detection
+_fzf_git_use_dotfiles_repo() {
+  [[ $PWD == $HOME || $PWD == $XDG_CONFIG_HOME(|/*) ]]
+}
+
+# Dotfiles-aware fzf-git widgets
+_fzf_git_wrap_widget() {
+  local widget=$1
+  local original="__wrapped_${widget//-/_}"
+
+  functions -c "$widget" "$original"
+
+  eval "
+    $widget() {
+      local -x GIT_DIR GIT_WORK_TREE
+
+      if _fzf_git_use_dotfiles_repo; then
+        GIT_DIR=\$DOTFILES_GIT
+        GIT_WORK_TREE=\$HOME
+      fi
+
+      $original
+    }
+  "
+
+  zle -N "$widget"
+}
+
+# Dotfiles-aware widget registration
+for widget in \
+  fzf-git-files-widget \
+  fzf-git-branches-widget \
+  fzf-git-tags-widget \
+  fzf-git-remotes-widget \
+  fzf-git-hashes-widget \
+  fzf-git-stashes-widget \
+  fzf-git-lreflogs-widget \
+  fzf-git-each_ref-widget \
+  fzf-git-worktrees-widget
+do
+  _fzf_git_wrap_widget "$widget"
+done
+
+# Atuin history
 bindkey -M emacs '^R' atuin-search
 
+# Preview command
 file_or_dir_preview="
   if [[ -d {} ]]; then
     lsd --tree --color=always {} | head -200
@@ -15,6 +70,7 @@ file_or_dir_preview="
   fi
 "
 
+# Path completion
 _fzf_compgen_path() {
   fd --hidden --follow --exclude ".git" . "$1"
 }
@@ -23,6 +79,7 @@ _fzf_compgen_dir() {
   fd --type=d --hidden --exclude ".git" . "$1"
 }
 
+# Completion previews
 _fzf_comprun() {
   local command=$1
   shift
@@ -35,6 +92,7 @@ _fzf_comprun() {
   esac
 }
 
+# Fzf defaults
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
