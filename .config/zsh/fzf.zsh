@@ -58,9 +58,6 @@ do
   _fzf_git_wrap_widget "$widget"
 done
 
-# Atuin history
-bindkey -M emacs '^R' atuin-search
-
 # Preview command
 file_or_dir_preview="
   if [[ -d {} ]]; then

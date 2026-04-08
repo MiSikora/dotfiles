@@ -14,6 +14,9 @@ source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
 
+# Keep zsh line editing in emacs mode even though EDITOR is nvim.
+bindkey -e
+
 # Interactive plugins
 source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -21,6 +24,9 @@ source "$ZDOTDIR/fzf.zsh"
 
 # Allow Ctrl-S for fzf-git stashes
 [[ -t 0 ]] && stty -ixon
+
+# Atuin history widgets
+eval "$(atuin init zsh)"
 
 # Word navigation
 WORDCHARS=${WORDCHARS//[\/]}

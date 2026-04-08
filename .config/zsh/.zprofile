@@ -40,9 +40,6 @@ source <(jdk 25)
 # Private environment
 [[ -r "$XDG_CONFIG_HOME/secret/env" ]] && source "$XDG_CONFIG_HOME/secret/env"
 
-# Atuin
-eval "$(atuin init zsh)"
-
 # rbenv
 eval "$(rbenv init - --no-rehash zsh)"
 
