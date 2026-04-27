@@ -4,10 +4,10 @@
   "default_agent": "plan",
   "agent": {
     "plan": {
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
     },
     "build": {
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "permission": {
         "edit": "ask"
       }
