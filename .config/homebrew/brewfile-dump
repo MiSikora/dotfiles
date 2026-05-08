@@ -56,6 +56,31 @@ has_declaration() {
   return 1
 }
 
+# Formula dependencies are installed automatically and should not be managed here.
+has_direct_formula() {
+  local needle="$1"
+  local formula
+
+  for formula in "${direct_formulae[@]}"; do
+    [[ "$formula" == "$needle" ]] && return 0
+  done
+
+  return 1
+}
+
+is_direct_brew_declaration() {
+  local declaration="$1"
+  local name=""
+  local short_name=""
+
+  [[ "$declaration" == brew[[:space:]]* ]] || return 0
+
+  name="$(entry_name "$declaration")"
+  short_name="${name##*/}"
+
+  has_direct_formula "$name" || has_direct_formula "$short_name"
+}
+
 # Sort by Brewfile section first, then by the declaration text.
 declaration_sort_key() {
   local declaration="$1"
@@ -202,6 +227,16 @@ for managed_file in "$common_file" "$home_file" "$work_file"; do
   done <"$managed_file"
 done
 
+# Homebrew can dump dependency formulae; only prompt for explicitly installed ones.
+direct_formulae=()
+while IFS= read -r formula || [[ -n "$formula" ]]; do
+  direct_formulae+=("$formula")
+done < <(brew list --formula --installed-on-request)
+
+while IFS= read -r formula || [[ -n "$formula" ]]; do
+  direct_formulae+=("$formula")
+done < <(brew list --formula --installed-on-request --full-name)
+
 dump_file="$(mktemp)"
 trap 'rm -f "$dump_file"' EXIT
 
@@ -245,6 +280,7 @@ sort_profile=0
 for index in "${!blocks[@]}"; do
   declaration="${declarations[$index]}"
   has_declaration "$declaration" && continue
+  is_direct_brew_declaration "$declaration" || continue
 
   name="$(entry_name "$declaration")"
 
