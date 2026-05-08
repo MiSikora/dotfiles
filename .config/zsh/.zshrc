@@ -62,8 +62,46 @@ airlock() {
   open -a AeroSpace
 }
 
-alias bdump="brew bundle --global --force --describe dump"
-alias bsync="brew update; brew upgrade; brew cu --all --cleanup --yes; brew bundle --verbose --global --force cleanup"
+_dotfiles_profile() {
+  local profile="${1:-${DOTFILES_PROFILE:-}}"
+
+  if [[ -z "$profile" && -r "$XDG_CONFIG_HOME/profile" ]]; then
+    profile="$(<"$XDG_CONFIG_HOME/profile")"
+  fi
+
+  case "$profile" in
+  home|work)
+    export DOTFILES_PROFILE="$profile"
+    ;;
+  "")
+    print -u2 "DOTFILES_PROFILE is not set. Expected 'home' or 'work'."
+    return 1
+    ;;
+  *)
+    print -u2 "Invalid DOTFILES_PROFILE=$profile. Expected 'home' or 'work'."
+    return 1
+    ;;
+  esac
+}
+
+bdump() {
+  if ! _dotfiles_profile "$1"; then
+    return 1
+  fi
+
+  brew bundle --global --force --describe dump
+}
+
+bsync() {
+  if ! _dotfiles_profile "$1"; then
+    return 1
+  fi
+
+  brew update &&
+    brew upgrade &&
+    brew cu --all --cleanup --yes &&
+    brew bundle --verbose --global --force cleanup
+}
 
 alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
 alias fzfa="atuin history list --cmd-only | fzf"

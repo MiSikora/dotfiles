@@ -46,9 +46,9 @@ setup_profile() {
       read -r choice
 
       case "$choice" in
-        1) profile="home" ;;
-        2) profile="work" ;;
-        *) profile="" ;;
+      1) profile="home" ;;
+      2) profile="work" ;;
+      *) profile="" ;;
       esac
     done
 
