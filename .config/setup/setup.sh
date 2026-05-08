@@ -56,6 +56,8 @@ setup_profile() {
   fi
 
   export DOTFILES_PROFILE="$profile"
+  export HOMEBREW_DOTFILES_PROFILE="$profile"
+  export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
   success "Using $DOTFILES_PROFILE profile"
 }
 
@@ -104,7 +106,7 @@ else
   success "Homebrew already installed"
 fi
 
-brew bundle --verbose --global
+HOMEBREW_DOTFILES_PROFILE="$DOTFILES_PROFILE" brew bundle --verbose --global
 
 section "Dotfiles git repository setup"
 

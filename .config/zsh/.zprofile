@@ -7,7 +7,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Homebrew config
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile"
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
 
 # Git config
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
@@ -20,9 +20,6 @@ export DOTFILES_GIT="$HOME/projects/dotfiles.git"
 
 # Android SDK
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-
-# Bartib config
-export BARTIB_FILE="$XDG_CONFIG_HOME/secret/bartib.txt"
 
 # Preferred tools
 typeset -U path PATH

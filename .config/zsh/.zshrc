@@ -72,6 +72,8 @@ _dotfiles_profile() {
   case "$profile" in
   home|work)
     export DOTFILES_PROFILE="$profile"
+    export HOMEBREW_DOTFILES_PROFILE="$profile"
+    export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
     ;;
   "")
     print -u2 "DOTFILES_PROFILE is not set. Expected 'home' or 'work'."
@@ -89,7 +91,7 @@ bdump() {
     return 1
   fi
 
-  brew bundle --global --force --describe dump
+  "$XDG_CONFIG_HOME/homebrew/brewfile-dump"
 }
 
 bsync() {

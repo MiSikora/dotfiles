@@ -1,0 +1,16 @@
+profile = ENV["HOMEBREW_DOTFILES_PROFILE"]
+
+unless profile
+  abort "HOMEBREW_DOTFILES_PROFILE must be set to 'home' or 'work'"
+end
+
+unless %w[home work].include?(profile)
+  abort "Unsupported HOMEBREW_DOTFILES_PROFILE=#{profile.inspect}. Expected 'home' or 'work'"
+end
+
+brewfile_dir = File.dirname(__FILE__)
+
+["common", profile].each do |name|
+  path = File.join(brewfile_dir, name)
+  instance_eval(File.read(path), path)
+end

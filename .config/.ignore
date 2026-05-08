@@ -1,7 +1,6 @@
 fzf/*
 raycast/*
 tmux/plugins/*
-brewfile
 captureone/*
 gnupg/*
 karabiner/*
@@ -15,3 +14,6 @@ zsh/*
 !zsh/.zprofile
 !zsh/fzf.zsh
 !.ignore
+opencode/*
+!opencode/AGENTS.MD
+!opencode/opencode.json

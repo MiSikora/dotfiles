@@ -1,13 +1,10 @@
 tap "anomalyco/tap"
-tap "automattic/build-tools"
 tap "buo/cask-upgrade"
 tap "graalvm/tap"
 tap "mdogan/zulu"
 tap "nikitabobko/tap"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
-# Simple timetracker for the command-line
-brew "bartib"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
@@ -54,8 +51,6 @@ brew "neovim"
 brew "sqlite"
 # Manage multiple Node.js versions
 brew "nvm"
-# Package compiler and linker metadata toolkit
-brew "pkgconf"
 # Theme for zsh
 brew "powerlevel10k"
 # Python version management
@@ -76,14 +71,10 @@ brew "shfmt"
 brew "showkey"
 # Opinionated Lua code formatter
 brew "stylua"
-# Nodejs-based tool for optimizing SVG vector graphics files
-brew "svgo"
 # Terminal multiplexer
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
-# Command-line client for WebSockets
-brew "websocat"
 # Internet file retriever
 brew "wget"
 # UNIX shell (command interpreter)
@@ -94,14 +85,10 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
-# A multi-language code generation tool for type-safe event tracking.
-brew "automattic/build-tools/event-horizon"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace"
-# Image editing and design software
-cask "affinity"
 # Command-line tools for building and debugging Android apps
 cask "android-commandlinetools"
 # Android SDK component
@@ -110,8 +97,6 @@ cask "android-platform-tools"
 cask "chatgpt"
 # Cross-platform Text Expander written in Rust
 cask "espanso"
-# Collaborative team software
-cask "figma"
 # Web browser
 cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
@@ -122,36 +107,16 @@ cask "graalvm/tap/graalvm-jdk25"
 cask "jetbrains-toolbox"
 # Keyboard customiser
 cask "karabiner-elements"
-# App to manage software development and track bugs
-cask "linear-linear"
 # Media key forwarder for iTunes and Spotify
 cask "macmediakeyforwarder"
-# VPN client
-cask "mullvad-vpn"
-# Open-source software for live streaming and screen recording
-cask "obs"
-# Knowledge base that works on top of a local folder of plain text Markdown files
-cask "obsidian"
-# Podcast platform
-cask "pocket-casts"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Screenshot measurement and annotation tool
 cask "shottr"
-# Team communication and collaboration software
-cask "slack"
 # Music streaming service
 cask "spotify"
-# Video game digital distribution service
-cask "steam"
-# Open-source BitTorrent client
-cask "transmission"
 # Multimedia player
 cask "vlc"
-# Native desktop client for WhatsApp
-cask "whatsapp"
-# Video communication and virtual meeting platform
-cask "zoom"
 # OpenJDK distribution from Azul
 cask "mdogan/zulu/zulu-jdk17"
 # OpenJDK distribution from Azul

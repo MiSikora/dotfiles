@@ -1,0 +1,13 @@
+tap "automattic/build-tools"
+# A multi-language code generation tool for type-safe event tracking.
+brew "automattic/build-tools/event-horizon"
+# Collaborative team software
+cask "figma"
+# App to manage software development and track bugs
+cask "linear"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Podcast platform
+cask "pocket-casts"
+# Video communication and virtual meeting platform
+cask "zoom"

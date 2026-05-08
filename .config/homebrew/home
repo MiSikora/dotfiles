@@ -1,0 +1,12 @@
+# Image editing and design software
+cask "affinity"
+# VPN client
+cask "mullvad-vpn"
+# Video game digital distribution service
+cask "steam"
+# Open-source BitTorrent client
+cask "transmission"
+# Native desktop client for WhatsApp
+cask "whatsapp"
+# Team communication and collaboration software
+cask "slack"
