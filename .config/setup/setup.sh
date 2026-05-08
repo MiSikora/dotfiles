@@ -3,20 +3,20 @@ set -e
 
 section() {
   echo ""
-  printf "%b" "\033[1;33m\0$1\033[0m\n"
+  printf "\033[1;33m%s\033[0m\n" "$1"
 }
 
 info() {
-  printf "%b" "\033[1;37m\0$1\033[0m\n"
+  printf "\033[1;37m%s\033[0m\n" "$1"
 }
 
 success() {
-  printf "%b" "\033[1;32m\0$1\033[0m\n"
+  printf "\033[1;32m%s\033[0m\n" "$1"
 }
 
 fail() {
   echo ""
-  printf "%b" "\033[1;31m\0$1\033[0m\n"
+  printf "\033[1;31m%s\033[0m\n" "$1"
   echo ""
   exit 1
 }
