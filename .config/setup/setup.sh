@@ -21,6 +21,47 @@ fail() {
   exit 1
 }
 
+valid_profile() {
+  [[ "$1" == "home" || "$1" == "work" ]]
+}
+
+setup_profile() {
+  local profile_file="$XDG_CONFIG_HOME/profile"
+  local profile=""
+  local choice=""
+
+  if [[ -r "$profile_file" ]]; then
+    profile="$(<"$profile_file")"
+  fi
+
+  if ! valid_profile "$profile"; then
+    if [[ -n "$profile" ]]; then
+      info "Ignoring invalid profile: $profile"
+    fi
+
+    while ! valid_profile "$profile"; do
+      info "Which profile should be set up?"
+      info "1) home"
+      info "2) work"
+      read -r choice
+
+      case "$choice" in
+        1) profile="home" ;;
+        2) profile="work" ;;
+        *) profile="" ;;
+      esac
+    done
+
+    printf "%s\n" "$profile" >"$profile_file"
+  fi
+
+  export DOTFILES_PROFILE="$profile"
+  success "Using $DOTFILES_PROFILE profile"
+}
+
+section "Profile setup"
+setup_profile
+
 section "Xcode CLI tools setup"
 
 if ! xcode-select --print-path >/dev/null 2>&1; then
