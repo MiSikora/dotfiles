@@ -1,6 +1,8 @@
 tap "automattic/build-tools"
+
 # A multi-language code generation tool for type-safe event tracking.
 brew "automattic/build-tools/event-horizon"
+
 # Collaborative team software
 cask "figma"
 # App to manage software development and track bugs
