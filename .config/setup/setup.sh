@@ -57,7 +57,6 @@ setup_profile() {
 
   export DOTFILES_PROFILE="$profile"
   export HOMEBREW_DOTFILES_PROFILE="$profile"
-  export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
   success "Using $DOTFILES_PROFILE profile"
 }
 
