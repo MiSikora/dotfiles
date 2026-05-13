@@ -1,0 +1,527 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
+from typing import NoReturn, Protocol, Sequence
+
+
+class Declaration(Protocol):
+    @property
+    def entry(self) -> str: ...
+
+    @property
+    def comment(self) -> str | None: ...
+
+    @property
+    def kind(self) -> DeclarationKind: ...
+
+
+@dataclass(frozen=True)
+class TrackedDeclaration:
+    entry: str
+    comment: str | None
+    source: str
+    line_number: int
+
+    @property
+    def kind(self) -> DeclarationKind:
+        return required_declaration_kind(self.entry, self.location)
+
+    @property
+    def location(self) -> str:
+        return f"{self.source}:{self.line_number}"
+
+
+@dataclass(frozen=True)
+class UntrackedDeclaration:
+    entry: str
+    comment: str | None
+
+    @property
+    def kind(self) -> DeclarationKind:
+        return required_declaration_kind(self.entry, self.location)
+
+    @property
+    def location(self) -> str:
+        return "untracked"
+
+
+class DeclarationKind(str, Enum):
+    TAP = "tap"
+    BREW = "brew"
+    CASK = "cask"
+
+    @property
+    def order(self) -> int:
+        match self:
+            case DeclarationKind.TAP:
+                return 1
+            case DeclarationKind.BREW:
+                return 2
+            case DeclarationKind.CASK:
+                return 3
+
+
+@dataclass(frozen=True)
+class Config:
+    dry_run: bool
+    profile: Profile
+    brewfile_dir: Path
+
+    @property
+    def common_file(self) -> Path:
+        return self.brewfile_dir / "common"
+
+    @property
+    def home_file(self) -> Path:
+        return self.brewfile_dir / Profile.HOME.value
+
+    @property
+    def work_file(self) -> Path:
+        return self.brewfile_dir / Profile.WORK.value
+
+    @property
+    def tracked_files(self) -> list[Path]:
+        return [self.common_file, self.home_file, self.work_file]
+
+    @property
+    def profile_file(self) -> Path:
+        return self.brewfile_dir / self.profile.value
+
+
+class Profile(str, Enum):
+    HOME = "home"
+    WORK = "work"
+
+
+@dataclass(frozen=True)
+class BrewfileData:
+    tracked_declarations_by_file: dict[Path, list[TrackedDeclaration]]
+    requested_formula_names: set[str]
+    dumped_entries: list[tuple[str, str | None, int]]
+
+
+@dataclass(frozen=True)
+class BrewfileChanges:
+    profile_declarations: list[UntrackedDeclaration]
+    common_declarations: list[UntrackedDeclaration]
+
+    @property
+    def added_count(self) -> int:
+        return len(self.profile_declarations) + len(self.common_declarations)
+
+
+def main(argv: Sequence[str]) -> int:
+    config = load_config(argv)
+    data = read_data(config)
+
+    pending_declarations = prepare_pending_declarations(data)
+    if not pending_declarations:
+        print("No new Homebrew entries found.")
+        return 0
+
+    changes = ask_for_user_input(config.profile, pending_declarations)
+    if confirm_input(config, changes):
+        save_input(config, data, changes)
+
+    return 0
+
+
+def read_data(config: Config) -> BrewfileData:
+    tracked_declarations_by_file: dict[Path, list[TrackedDeclaration]] = {}
+
+    for tracked_file in config.tracked_files:
+        source_name = str(tracked_file)
+        tracked_declarations_by_file[tracked_file] = [
+            TrackedDeclaration(
+                entry=entry,
+                comment=comment,
+                source=source_name,
+                line_number=line_number,
+            )
+            for entry, comment, line_number in parse_declaration_entries(
+                tracked_file.read_text(encoding="utf-8"),
+                source_name,
+            )
+        ]
+
+    requested_formula_names, dumped_entries = inspect_homebrew()
+    return BrewfileData(
+        tracked_declarations_by_file=tracked_declarations_by_file,
+        requested_formula_names=requested_formula_names,
+        dumped_entries=dumped_entries,
+    )
+
+
+def prepare_pending_declarations(data: BrewfileData) -> list[UntrackedDeclaration]:
+    tracked_entries = {
+        declaration.entry
+        for declarations in data.tracked_declarations_by_file.values()
+        for declaration in declarations
+    }
+    untracked_declarations = [
+        UntrackedDeclaration(entry=entry, comment=comment)
+        for entry, comment, _line_number in data.dumped_entries
+        if entry not in tracked_entries
+    ]
+
+    return [
+        declaration
+        for declaration in untracked_declarations
+        if declaration.kind is not DeclarationKind.BREW
+        or declaration_name(declaration.entry, declaration.location)
+        in data.requested_formula_names
+    ]
+
+
+def ask_for_user_input(
+    profile: Profile,
+    pending_declarations: list[UntrackedDeclaration],
+) -> BrewfileChanges:
+    pending_declarations.sort(key=declaration_sort_key)
+    return choose_profile_declarations(
+        profile,
+        pending_declarations,
+    )
+
+
+def confirm_input(config: Config, changes: BrewfileChanges) -> bool:
+    profile_declarations = changes.profile_declarations
+    common_declarations = changes.common_declarations
+
+    if profile_declarations:
+        print(f"Add to {config.profile.value}:")
+
+        for declaration in profile_declarations:
+            print(declaration.entry)
+
+    if common_declarations:
+        if profile_declarations:
+            print()
+
+        print("Add to common:")
+
+        for declaration in common_declarations:
+            print(declaration.entry)
+
+    print()
+
+    if config.dry_run:
+        print(
+            "Dry run: would add "
+            f"{changes.added_count} Homebrew entries: "
+            f"{len(common_declarations)} common, "
+            f"{len(profile_declarations)} {config.profile.value}."
+        )
+        return False
+
+    confirm_changes()
+    return True
+
+
+def save_input(config: Config, data: BrewfileData, changes: BrewfileChanges) -> None:
+    replacements: list[tuple[Path, str]] = []
+
+    if changes.common_declarations:
+        common_content = render_brewfile(
+            data.tracked_declarations_by_file[config.common_file],
+            changes.common_declarations,
+        )
+        replacements.append((config.common_file, common_content))
+
+    if changes.profile_declarations:
+        profile_content = render_brewfile(
+            data.tracked_declarations_by_file[config.profile_file],
+            changes.profile_declarations,
+        )
+        replacements.append((config.profile_file, profile_content))
+
+    for destination, content in replacements:
+        with destination.open("w", encoding="utf-8", newline="\n") as file:
+            file.write(content)
+
+    print(
+        f"Added {changes.added_count} Homebrew entries: "
+        f"{len(changes.common_declarations)} common, "
+        f"{len(changes.profile_declarations)} {config.profile.value}."
+    )
+
+
+def load_config(argv: Sequence[str]) -> Config:
+    dry_run = False
+
+    if len(argv) > 1:
+        fail("brewfile-dump-python accepts only one argument: --dry-run")
+
+    if argv:
+        if argv[0] != "--dry-run":
+            fail(f"Unsupported argument: {argv[0]}. Expected --dry-run.")
+
+        dry_run = True
+
+    xdg_config_home = os.environ.get("XDG_CONFIG_HOME")
+    profile_name = os.environ.get("DOTFILES_PROFILE")
+
+    if not xdg_config_home:
+        fail("XDG_CONFIG_HOME is not set")
+
+    if not profile_name:
+        fail("DOTFILES_PROFILE is not set. Expected 'home' or 'work'.")
+
+    try:
+        profile = Profile(profile_name)
+    except ValueError:
+        fail(f"Invalid DOTFILES_PROFILE={profile_name}. Expected 'home' or 'work'.")
+
+    if shutil.which("brew") is None:
+        fail("brew not found")
+
+    if shutil.which("gum") is None:
+        fail("gum not found")
+
+    brewfile_dir = Path(xdg_config_home) / "homebrew"
+    config = Config(
+        dry_run=dry_run,
+        profile=profile,
+        brewfile_dir=brewfile_dir,
+    )
+
+    if not brewfile_dir.is_dir():
+        fail(f"Homebrew config directory not found: {brewfile_dir}")
+
+    if not os.access(brewfile_dir, os.W_OK | os.X_OK):
+        fail(f"Directory is not writable: {brewfile_dir}")
+
+    for tracked_file in config.tracked_files:
+        if not tracked_file.is_file():
+            fail(f"Brewfile not found: {tracked_file}")
+
+        if not os.access(tracked_file, os.R_OK):
+            fail(f"Brewfile is not readable: {tracked_file}")
+
+    return config
+
+
+def inspect_homebrew() -> tuple[set[str], list[tuple[str, str | None, int]]]:
+    print("Inspecting Homebrew state...")
+
+    requested_formula_names = {
+        line
+        for line in run_inspection_command(
+            ["brew", "list", "--formula", "--installed-on-request"]
+        ).splitlines()
+        if line
+    }
+    requested_formula_names |= {
+        line
+        for line in run_inspection_command(
+            [
+                "brew",
+                "list",
+                "--formula",
+                "--installed-on-request",
+                "--full-name",
+            ]
+        ).splitlines()
+        if line
+    }
+    dump_content = run_inspection_command(
+        ["brew", "bundle", "--file=-", "--force", "--describe", "dump"]
+    )
+    dumped_entries = parse_declaration_entries(dump_content, "Homebrew dump")
+    return requested_formula_names, dumped_entries
+
+
+def run_inspection_command(command: Sequence[str]) -> str:
+    result = subprocess.run(
+        command,
+        check=False,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+
+    if result.returncode != 0:
+        raise SystemExit(result.returncode)
+
+    return result.stdout
+
+
+def parse_declaration_entries(
+    content: str,
+    source_name: str,
+) -> list[tuple[str, str | None, int]]:
+    entries: list[tuple[str, str | None, int]] = []
+    comment_lines: list[str] = []
+
+    for line_number, line in enumerate(content.splitlines(), 1):
+        entry = line.strip()
+
+        if not entry:
+            continue
+
+        if entry.startswith("#"):
+            comment_lines.append(line)
+            continue
+
+        kind = declaration_kind(entry)
+
+        if kind is None:
+            fail(f"Unsupported Brewfile line at {source_name}:{line_number}: {line}")
+
+        declaration_name(entry, f"{source_name}:{line_number}")
+
+        comment = None
+
+        if comment_lines:
+            comment = "\n".join(comment_lines) + "\n"
+
+        entries.append((entry, comment, line_number))
+        comment_lines = []
+
+    if comment_lines:
+        fail(f"{source_name} ended with comments not attached to a declaration")
+
+    return entries
+
+
+def declaration_kind(declaration: str) -> DeclarationKind | None:
+    parts = declaration.split(maxsplit=1)
+
+    if len(parts) != 2:
+        return None
+
+    try:
+        return DeclarationKind(parts[0])
+    except ValueError:
+        return None
+
+
+def required_declaration_kind(declaration: str, location: str) -> DeclarationKind:
+    kind = declaration_kind(declaration)
+
+    if kind is None:
+        fail(f"Unsupported Brewfile declaration at {location}: {declaration}")
+
+    return kind
+
+
+def declaration_name(declaration: str, location: str | None = None) -> str:
+    if location:
+        error_message = f"Malformed Brewfile declaration at {location}: {declaration}"
+    else:
+        error_message = f"Malformed Brewfile declaration: {declaration}"
+
+    parts = declaration.split(maxsplit=1)
+
+    if len(parts) != 2 or declaration_kind(declaration) is None:
+        fail(error_message)
+
+    arguments = parts[1]
+
+    if not arguments.startswith('"'):
+        fail(error_message)
+
+    closing_quote = arguments.find('"', 1)
+
+    if closing_quote <= 1:
+        fail(error_message)
+
+    return arguments[1:closing_quote]
+
+
+def declaration_sort_key(declaration: Declaration) -> tuple[int, str]:
+    return declaration.kind.order, declaration.entry
+
+
+def render_brewfile(
+    existing_declarations: Sequence[Declaration],
+    new_declarations: Sequence[Declaration],
+) -> str:
+    declarations = list(existing_declarations) + list(new_declarations)
+    declarations.sort(key=declaration_sort_key)
+
+    output: list[str] = []
+    previous_order: int | None = None
+
+    for declaration in declarations:
+        order = declaration_sort_key(declaration)[0]
+
+        if previous_order is not None and order != previous_order:
+            output.append("\n")
+
+        if declaration.comment is not None:
+            output.append(declaration.comment)
+
+        output.append(f"{declaration.entry}\n")
+        previous_order = order
+
+    return "".join(output)
+
+
+def choose_profile_declarations(
+    profile: Profile,
+    declarations: Sequence[UntrackedDeclaration],
+) -> BrewfileChanges:
+    choices = [declaration.entry for declaration in declarations]
+    result = subprocess.run(
+        [
+            "gum",
+            "choose",
+            "--no-limit",
+            "--header",
+            f"Select entries for {profile.value}. Unselected entries go to common.",
+            *choices,
+        ],
+        check=False,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+
+    if result.returncode != 0:
+        fail("Selection cancelled")
+
+    selected_entries = {line for line in result.stdout.splitlines() if line}
+    profile_declarations = [
+        declaration
+        for declaration in declarations
+        if declaration.entry in selected_entries
+    ]
+    common_declarations = [
+        declaration
+        for declaration in declarations
+        if declaration.entry not in selected_entries
+    ]
+
+    return BrewfileChanges(
+        profile_declarations=profile_declarations,
+        common_declarations=common_declarations,
+    )
+
+
+def confirm_changes() -> None:
+    result = subprocess.run(
+        ["gum", "confirm", "--default", "Apply these Brewfile changes?"],
+        check=False,
+    )
+
+    if result.returncode != 0:
+        fail("Cancelled")
+
+
+def fail(message: str) -> NoReturn:
+    print(message, file=sys.stderr)
+    raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main(sys.argv[1:]))
+    except KeyboardInterrupt:
+        print("Interrupted", file=sys.stderr)
+        raise SystemExit(130)

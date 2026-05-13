@@ -3,6 +3,9 @@ tap "buo/cask-upgrade"
 tap "graalvm/tap"
 tap "mdogan/zulu"
 tap "nikitabobko/tap"
+
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -35,6 +38,8 @@ brew "git-delta"
 brew "git-lfs"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Tool for glamorous shell scripts
+brew "gum"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Dex to Java decompiler
@@ -47,18 +52,20 @@ brew "lsd"
 brew "lua-language-server"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
-# Command-line interface for SQLite
-brew "sqlite"
 # Manage multiple Node.js versions
 brew "nvm"
 # Theme for zsh
 brew "powerlevel10k"
 # Python version management
 brew "pyenv"
+# Python Language Server for the Language Server Protocol
+brew "python-lsp-server"
 # Ruby version manager
 brew "rbenv"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Extremely fast Python linter, written in Rust
+brew "ruff"
 # Rust toolchain installer
 brew "rustup"
 # Display and control your Android device
@@ -69,6 +76,8 @@ brew "shellcheck"
 brew "shfmt"
 # Simple keystroke visualizer
 brew "showkey"
+# Command-line interface for SQLite
+brew "sqlite"
 # Opinionated Lua code formatter
 brew "stylua"
 # Terminal multiplexer
@@ -83,12 +92,9 @@ brew "zsh"
 brew "zsh-autosuggestions"
 # Fish shell like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
+
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
-# AeroSpace is an i3-like tiling window manager for macOS
-cask "nikitabobko/tap/aerospace"
 # Command-line tools for building and debugging Android apps
 cask "android-commandlinetools"
 # Android SDK component
@@ -109,17 +115,21 @@ cask "jetbrains-toolbox"
 cask "karabiner-elements"
 # Media key forwarder for iTunes and Spotify
 cask "macmediakeyforwarder"
-# Control your tools with a few keystrokes
-cask "raycast"
-# Screenshot measurement and annotation tool
-cask "shottr"
-# Music streaming service
-cask "spotify"
-# Multimedia player
-cask "vlc"
 # OpenJDK distribution from Azul
 cask "mdogan/zulu/zulu-jdk17"
 # OpenJDK distribution from Azul
 cask "mdogan/zulu/zulu-jdk21"
 # OpenJDK distribution from Azul
 cask "mdogan/zulu/zulu-jdk25"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "nikitabobko/tap/aerospace"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# Music streaming service
+cask "spotify"
+# To-do & task list manager
+cask "ticktick"
+# Multimedia player
+cask "vlc"
