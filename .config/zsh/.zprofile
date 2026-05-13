@@ -9,6 +9,24 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 # Homebrew config
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
 
+# Dotfiles profile
+unset DOTFILES_PROFILE HOMEBREW_DOTFILES_PROFILE
+
+if [[ -r "$XDG_CONFIG_HOME/profile" ]]; then
+  DOTFILES_PROFILE="$(<"$XDG_CONFIG_HOME/profile")"
+
+  case "$DOTFILES_PROFILE" in
+  home|work)
+    export DOTFILES_PROFILE
+    export HOMEBREW_DOTFILES_PROFILE="$DOTFILES_PROFILE"
+    ;;
+  *)
+    print -u2 "Invalid DOTFILES_PROFILE=$DOTFILES_PROFILE. Expected 'home' or 'work'."
+    unset DOTFILES_PROFILE
+    ;;
+  esac
+fi
+
 # Git config
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
 
@@ -35,7 +53,8 @@ source <(jdk 25 graal)
 source <(jdk 25)
 
 # Private environment
-[[ -r "$XDG_CONFIG_HOME/secret/env" ]] && source "$XDG_CONFIG_HOME/secret/env"
+[[ -r "$XDG_CONFIG_HOME/secret/common.env" ]] && source "$XDG_CONFIG_HOME/secret/common.env"
+[[ -n "$DOTFILES_PROFILE" && -r "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env" ]] && source "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env"
 
 # rbenv
 eval "$(rbenv init - --no-rehash zsh)"
