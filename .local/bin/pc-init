@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 adb-all shell <<'EOF' 2>/dev/null || true
   run-as au.com.shiftyjelly.pocketcasts.debug

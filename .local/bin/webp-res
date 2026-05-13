@@ -2,6 +2,7 @@
 set -euo pipefail
 
 QUALITY=75
+IMAGE=""
 
 usage="Create a set of WebP images from a provided image. Scripts assumes that the image is in xxxhdpi resolution.
     -i  source image file
@@ -31,13 +32,13 @@ if ! command -v magick &>/dev/null; then
 fi
 
 # Require source image file
-if [ ! -f "${IMAGE}" ]; then
+if [[ -z "$IMAGE" || ! -f "$IMAGE" ]]; then
   echo "-i argument must be provided\n" >&2
   echo "$usage" >&2
   exit 1
 fi
 
-if ! ((QUALITY >= 0 && QUALITY <= 100)); then
+if ! [[ "$QUALITY" =~ ^[0-9]+$ ]] || ! ((QUALITY >= 0 && QUALITY <= 100)); then
   echo "-q argument '${QUALITY}' must be a number between 0 and 100\n" >&2
   echo "$usage" >&2
   exit 1

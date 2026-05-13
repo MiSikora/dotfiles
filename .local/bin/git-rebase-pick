@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-commit="$1"
-if [[ -z "$commit" ]]; then
+if [[ $# -lt 1 ]]; then
   echo "Usage: git rebase-cherry <commit_hash>"
   exit 1
 fi
+
+commit="$1"
 
 git fetch -p
 git pull --ff-only

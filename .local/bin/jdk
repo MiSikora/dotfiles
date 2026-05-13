@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: $0 <version> [flavor]" >&2
+  exit 1
+fi
 
 version="$1"
-flavor="$2"
+flavor=""
+if [[ $# -ge 2 ]]; then
+  flavor="$2"
+fi
 is_graal=false
 
 if [[ "$(echo "$flavor" | tr '[:upper:]' '[:lower:]')" == "graal" ]]; then
@@ -12,6 +21,7 @@ fi
 java_home_json=$(/usr/libexec/java_home -X | plutil -convert json -o - -)
 
 if [[ "$is_graal" == true ]]; then
+  # shellcheck disable=SC2016
   java_home=$(echo "$java_home_json" |
     jaq -r --arg ver "$version" \
       '[.[]
@@ -20,6 +30,7 @@ if [[ "$is_graal" == true ]]; then
         | .JVMHomePath
        ][0] // ""')
 else
+  # shellcheck disable=SC2016
   java_home=$(echo "$java_home_json" |
     jaq -r --arg ver "$version" \
       '[.[]
@@ -35,6 +46,10 @@ if [[ -n "$java_home" ]]; then
     echo "export GRAALVM_HOME=$java_home"
   fi
 else
-  echo "Error: No JDK found for version '$version'${flavor:+ and flavor '$flavor'}" >&2
+  if [[ -n "$flavor" ]]; then
+    echo "Error: No JDK found for version '$version' and flavor '$flavor'" >&2
+  else
+    echo "Error: No JDK found for version '$version'" >&2
+  fi
   exit 1
 fi
