@@ -88,7 +88,7 @@ class Config:
 
     @property
     def tracked_files(self) -> list[Path]:
-        return [self.common_file, self.home_file, self.work_file]
+        return [self.common_file, self.profile_file]
 
     @property
     def profile_file(self) -> Path:
@@ -111,10 +111,22 @@ class BrewfileData:
 class BrewfileChanges:
     profile_declarations: list[UntrackedDeclaration]
     common_declarations: list[UntrackedDeclaration]
+    removed_declarations_by_file: dict[Path, list[TrackedDeclaration]]
 
     @property
     def added_count(self) -> int:
         return len(self.profile_declarations) + len(self.common_declarations)
+
+    @property
+    def removed_count(self) -> int:
+        return sum(
+            len(declarations)
+            for declarations in self.removed_declarations_by_file.values()
+        )
+
+    @property
+    def has_changes(self) -> bool:
+        return self.added_count > 0 or self.removed_count > 0
 
 
 def main(argv: Sequence[str]) -> int:
@@ -122,11 +134,22 @@ def main(argv: Sequence[str]) -> int:
     data = read_data(config)
 
     pending_declarations = prepare_pending_declarations(data)
-    if not pending_declarations:
-        print("No new Homebrew entries found.")
+    stale_declarations_by_file = prepare_stale_declarations(data)
+
+    if not pending_declarations and not stale_declarations_by_file:
+        print("No Homebrew entries to add or remove.")
         return 0
 
-    changes = ask_for_user_input(config.profile, pending_declarations)
+    changes = ask_for_user_input(
+        config.profile,
+        pending_declarations,
+        stale_declarations_by_file,
+    )
+
+    if not changes.has_changes:
+        print("No Homebrew changes selected.")
+        return 0
+
     if confirm_input(config, changes):
         save_input(config, data, changes)
 
@@ -180,44 +203,109 @@ def prepare_pending_declarations(data: BrewfileData) -> list[UntrackedDeclaratio
     ]
 
 
+def prepare_stale_declarations(
+    data: BrewfileData,
+) -> dict[Path, list[TrackedDeclaration]]:
+    dumped_entries = {entry for entry, _comment, _line_number in data.dumped_entries}
+    stale_declarations_by_file: dict[Path, list[TrackedDeclaration]] = {}
+
+    for tracked_file, declarations in data.tracked_declarations_by_file.items():
+        stale_declarations = [
+            declaration
+            for declaration in declarations
+            if is_stale_declaration(
+                declaration,
+                data.requested_formula_names,
+                dumped_entries,
+            )
+        ]
+
+        if stale_declarations:
+            stale_declarations_by_file[tracked_file] = stale_declarations
+
+    return stale_declarations_by_file
+
+
+def is_stale_declaration(
+    declaration: TrackedDeclaration,
+    requested_formula_names: set[str],
+    dumped_entries: set[str],
+) -> bool:
+    if declaration.kind is DeclarationKind.BREW:
+        return (
+            declaration_name(declaration.entry, declaration.location)
+            not in requested_formula_names
+        )
+
+    return declaration.entry not in dumped_entries
+
+
 def ask_for_user_input(
     profile: Profile,
     pending_declarations: list[UntrackedDeclaration],
+    stale_declarations_by_file: dict[Path, list[TrackedDeclaration]],
 ) -> BrewfileChanges:
     pending_declarations.sort(key=declaration_sort_key)
-    return choose_profile_declarations(
-        profile,
-        pending_declarations,
+    profile_declarations: list[UntrackedDeclaration] = []
+    common_declarations: list[UntrackedDeclaration] = []
+
+    if pending_declarations:
+        profile_declarations, common_declarations = choose_profile_declarations(
+            profile,
+            pending_declarations,
+        )
+
+    return BrewfileChanges(
+        profile_declarations=profile_declarations,
+        common_declarations=common_declarations,
+        removed_declarations_by_file=stale_declarations_by_file,
     )
 
 
 def confirm_input(config: Config, changes: BrewfileChanges) -> bool:
     profile_declarations = changes.profile_declarations
     common_declarations = changes.common_declarations
+    sections: list[tuple[str, list[str]]] = []
 
     if profile_declarations:
-        print(f"Add to {config.profile.value}:")
-
-        for declaration in profile_declarations:
-            print(declaration.entry)
+        sections.append((
+            f"Add to {config.profile.value}:",
+            [declaration.entry for declaration in profile_declarations],
+        ))
 
     if common_declarations:
-        if profile_declarations:
+        sections.append((
+            "Add to common:",
+            [declaration.entry for declaration in common_declarations],
+        ))
+
+    for tracked_file in sorted(changes.removed_declarations_by_file, key=str):
+        sections.append((
+            f"Remove from {tracked_file.name}:",
+            [
+                declaration.entry
+                for declaration in changes.removed_declarations_by_file[tracked_file]
+            ],
+        ))
+
+    for section_index, (header, entries) in enumerate(sections):
+        if section_index:
             print()
 
-        print("Add to common:")
+        print(header)
 
-        for declaration in common_declarations:
-            print(declaration.entry)
+        for entry in entries:
+            print(entry)
 
     print()
 
     if config.dry_run:
         print(
-            "Dry run: would add "
-            f"{changes.added_count} Homebrew entries: "
-            f"{len(common_declarations)} common, "
-            f"{len(profile_declarations)} {config.profile.value}."
+            "Dry run: would update Homebrew entries: "
+            f"add {changes.added_count} "
+            f"({len(common_declarations)} common, "
+            f"{len(profile_declarations)} {config.profile.value}); "
+            f"remove {changes.removed_count}."
         )
         return False
 
@@ -227,29 +315,45 @@ def confirm_input(config: Config, changes: BrewfileChanges) -> bool:
 
 def save_input(config: Config, data: BrewfileData, changes: BrewfileChanges) -> None:
     replacements: list[tuple[Path, str]] = []
+    changed_files = set(changes.removed_declarations_by_file)
 
     if changes.common_declarations:
-        common_content = render_brewfile(
-            data.tracked_declarations_by_file[config.common_file],
-            changes.common_declarations,
-        )
-        replacements.append((config.common_file, common_content))
+        changed_files.add(config.common_file)
 
     if changes.profile_declarations:
-        profile_content = render_brewfile(
-            data.tracked_declarations_by_file[config.profile_file],
-            changes.profile_declarations,
+        changed_files.add(config.profile_file)
+
+    for tracked_file in sorted(changed_files, key=str):
+        removed_declarations = changes.removed_declarations_by_file.get(
+            tracked_file,
+            [],
         )
-        replacements.append((config.profile_file, profile_content))
+        existing_declarations = [
+            declaration
+            for declaration in data.tracked_declarations_by_file[tracked_file]
+            if declaration not in removed_declarations
+        ]
+        new_declarations: list[UntrackedDeclaration] = []
+
+        if tracked_file == config.common_file:
+            new_declarations = changes.common_declarations
+        elif tracked_file == config.profile_file:
+            new_declarations = changes.profile_declarations
+
+        replacements.append((
+            tracked_file,
+            render_brewfile(existing_declarations, new_declarations),
+        ))
 
     for destination, content in replacements:
         with destination.open("w", encoding="utf-8", newline="\n") as file:
             file.write(content)
 
     print(
-        f"Added {changes.added_count} Homebrew entries: "
-        f"{len(changes.common_declarations)} common, "
-        f"{len(changes.profile_declarations)} {config.profile.value}."
+        f"Updated Homebrew entries: added {changes.added_count} "
+        f"({len(changes.common_declarations)} common, "
+        f"{len(changes.profile_declarations)} {config.profile.value}); "
+        f"removed {changes.removed_count}."
     )
 
 
@@ -467,7 +571,7 @@ def render_brewfile(
 def choose_profile_declarations(
     profile: Profile,
     declarations: Sequence[UntrackedDeclaration],
-) -> BrewfileChanges:
+) -> tuple[list[UntrackedDeclaration], list[UntrackedDeclaration]]:
     choices = [declaration.entry for declaration in declarations]
     result = subprocess.run(
         [
@@ -498,10 +602,7 @@ def choose_profile_declarations(
         if declaration.entry not in selected_entries
     ]
 
-    return BrewfileChanges(
-        profile_declarations=profile_declarations,
-        common_declarations=common_declarations,
-    )
+    return profile_declarations, common_declarations
 
 
 def confirm_changes() -> None:
