@@ -234,6 +234,8 @@ def dump_brewfiles(
 
     if not has_changes or confirm_changes():
         save_brewfiles(config, updated_brewfiles)
+    else:
+        print("Brewfiles update cancelled.")
 
 
 def report_output(
@@ -302,6 +304,8 @@ def save_brewfiles(config: Config, brewfiles: Brewfiles) -> None:
 
 
 def confirm_changes() -> bool:
+    print()
+
     result = subprocess.run(
         ["gum", "confirm", "--default", "Apply these Brewfile changes?"],
         check=False,
