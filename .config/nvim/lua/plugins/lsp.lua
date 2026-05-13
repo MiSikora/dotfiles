@@ -25,6 +25,7 @@ return {
           },
         },
       })
+      vim.lsp.enable("pylsp")
       vim.lsp.enable("rust_analyzer")
       vim.lsp.enable("tsgo")
       vim.lsp.enable("yamlls")
@@ -80,6 +81,7 @@ return {
           jsonc = { "prettier" },
           lua = { "stylua" },
           markdown = { "prettier" },
+          python = { "ruff_format", "ruff_organize_imports" },
           rust = { "rustfmt" },
           scss = { "prettier" },
           sh = { "shfmt" },
