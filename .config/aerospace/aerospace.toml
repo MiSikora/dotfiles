@@ -12,10 +12,10 @@ accordion-padding = 24
 [gaps]
     inner.horizontal = 8
     inner.vertical =   8
-    outer.left =       0
-    outer.bottom =     0
-    outer.top =        0
-    outer.right =      0
+    outer.left =       8
+    outer.bottom =     8
+    outer.top =        8
+    outer.right =      8
 
 # https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.main.binding]

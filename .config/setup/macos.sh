@@ -43,7 +43,7 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
 
 # Disable automatic termination of inactive apps
 defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
@@ -96,7 +96,6 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGest
 defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 0
 defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture -int 0
 defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 0
-defaults write NSGlobalDomain AppleEnableSwipeNavigateWithScrolls -bool false
 
 # Set language and text formats
 defaults write NSGlobalDomain AppleLanguages -array "en-US"
@@ -274,6 +273,9 @@ defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
 # Disable automatic spell checking
 defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
+
+# Disable desktop widgets
+defaults write com.apple.WindowManager StandardHideWidgets -bool true
 
 ################################################################################
 ## Mac App Store                                                               #

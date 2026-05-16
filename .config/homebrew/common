@@ -99,8 +99,6 @@ cask "1password"
 cask "android-commandlinetools"
 # Android SDK component
 cask "android-platform-tools"
-# OpenAI's official ChatGPT desktop app
-cask "chatgpt"
 # Cross-platform Text Expander written in Rust
 cask "espanso"
 # Web browser
