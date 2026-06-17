@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-}"
+
+file="$(upfind .java_version 2>/dev/null || true)"
+
+if [[ -n "$file" && -f "$file" ]]; then
+  version="$(tr -d '[:space:]' <"$file")"
+else
+  version="${DOTFILES_JAVA_VERSION:-}"
+fi
+
+if [[ -z "$version" ]]; then
+  echo "No Java version found (.java_version or DOTFILES_JAVA_VERSION)" >&2
+  exit 1
+fi
+
+if [[ "$mode" == "graal" ]]; then
+  jdk "$version" graal
+  exit 0
+fi
+
+jdk "$version"

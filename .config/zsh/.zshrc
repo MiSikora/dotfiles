@@ -56,6 +56,13 @@ jdk() {
   java -version
 }
 
+__jdk_auto_hook() {
+  source <(jdk_auto graal)
+  source <(jdk_auto)
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd __jdk_auto_hook
+
 airlock() {
   osascript -e 'tell application "AeroSpace" to quit' >/dev/null 2>&1 || true
   pkill -x AeroSpace >/dev/null 2>&1 || true

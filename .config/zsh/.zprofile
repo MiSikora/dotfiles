@@ -55,8 +55,8 @@ path=(
 )
 
 # Java defaults
-source <(jdk 25 graal)
-source <(jdk 25)
+source <(jdk_auto graal)
+source <(jdk_auto)
 
 # rbenv
 eval "$(rbenv init - --no-rehash zsh)"
