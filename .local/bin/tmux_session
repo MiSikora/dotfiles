@@ -16,7 +16,6 @@ _tmux_session_usage() {
 
 _tmux_session_list() {
   local project_entries=''
-  local a8c_entries=''
   local dotfiles_entries=''
 
   _tmux_session_print_entries() {
@@ -50,19 +49,11 @@ _tmux_session_list() {
       continue
     fi
 
-    if [[ $project_path == "$PROJECTS_DIR/a8c/"* ]]; then
-      a8c_entries+="$label"$'\t'"$project_path"$'\n'
-    else
-      project_entries+="$label"$'\t'"$project_path"$'\n'
-    fi
+    project_entries+="$label"$'\t'"$project_path"$'\n'
   done < <(
     {
       if [[ -d $PROJECTS_DIR ]]; then
-        fd -t d -d 1 -E "*.git" -E a8c . "$PROJECTS_DIR" 2>/dev/null || true
-      fi
-
-      if [[ -d $PROJECTS_DIR/a8c ]]; then
-        fd -t d -d 1 . "$PROJECTS_DIR/a8c" 2>/dev/null || true
+        fd -t d -d 1 -E "*.git" . "$PROJECTS_DIR" 2>/dev/null || true
       fi
     }
   )
@@ -80,7 +71,6 @@ _tmux_session_list() {
   fi
 
   _tmux_session_print_entries "$project_entries"
-  _tmux_session_print_entries "$a8c_entries"
   _tmux_session_print_entries "$dotfiles_entries"
 }
 

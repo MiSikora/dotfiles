@@ -32,6 +32,3 @@
 	sort = -committerdate
 [push]
   autoSetupRemote = true
-
-[includeIf "hasconfig:remote.*.url:git@github.a8c.com:*/**"]
-  path = ~/projects/a8c/.gitconfig

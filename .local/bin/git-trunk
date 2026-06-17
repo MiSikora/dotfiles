@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-for branch in trunk main master; do
-  if git rev-parse "$branch" &>/dev/null; then
-    echo "$branch"
-    break
-  fi
-done
