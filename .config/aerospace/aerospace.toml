@@ -126,35 +126,35 @@ accordion-padding = 24
     ctrl-alt-cmd-shift-k = ["join-with up", "mode main"]
     ctrl-alt-cmd-shift-l = ["join-with right", "mode main"]
 
-# Terminal
-
+# [0]
 [[on-window-detected]]
     if.app-id = "com.mitchellh.ghostty"
     run = ["move-node-to-workspace 0"]
 
-# [A]udio
-
+# [A]
 [[on-window-detected]]
     if.app-id = "com.spotify.client"
     run = ["move-node-to-workspace A"]
 
+# [B]
 [[on-window-detected]]
-    if.app-id = "com.electron.pocket-casts"
-    run = ["move-node-to-workspace A"]
-
-# [B]rowser
+    if.app-id = "com.duckduckgo.macos.browser"
+    run = ["move-node-to-workspace B"]
 
 [[on-window-detected]]
     if.app-id = "org.mozilla.firefox"
     run = ["move-node-to-workspace B"]
 
-# [C]hat GPT
+# [C]
+[[on-window-detected]]
+    if.app-id = "com.anthropic.claudefordesktop"
+    run = ["move-node-to-workspace C"]
+
 [[on-window-detected]]
     if.app-id = "com.openai.chat"
     run = ["move-node-to-workspace C"]
 
-# [I]DE
-
+# [I]
 [[on-window-detected]]
     if.app-id = "com.google.android.studio"
     run = ["move-node-to-workspace I"]
@@ -163,9 +163,7 @@ accordion-padding = 24
     if.app-id = "com.jetbrains.intellij.ce"
     run = ["move-node-to-workspace I"]
 
-# [M]essaging
-
-# Safari as a Messenger wrapper
+# [M]
 [[on-window-detected]]
     if.app-id = "com.apple.Safari"
     run = ["move-node-to-workspace M"]
@@ -178,33 +176,39 @@ accordion-padding = 24
     if.app-id = "com.apple.MobileSMS"
     run = ["move-node-to-workspace M"]
 
-# [E]mail
+# [E]
 [[on-window-detected]]
     if.app-id = "com.apple.mail"
     run = ["move-node-to-workspace E"]
 
-# [F]igma
+[[on-window-detected]]
+    if.app-id = "com.microsoft.Outlook"
+    run = ["move-node-to-workspace E"]
+
+# [F]
 [[on-window-detected]]
     if.app-id = "com.figma.Desktop"
     run = ["move-node-to-workspace F"]
 
-# [S]lack
+# [S]
+[[on-window-detected]]
+    if.app-id = "Mattermost.Desktop"
+    run = ["move-node-to-workspace S"]
+
 [[on-window-detected]]
     if.app-id = "com.tinyspeck.slackmacgap"
     run = ["move-node-to-workspace S"]
 
-# [T]asks
+# [T]
+[[on-window-detected]]
+    if.app-id = "com.electron.asana"
+    run = ["move-node-to-workspace T"]
+
 [[on-window-detected]]
     if.app-id = "com.linear"
     run = ["move-node-to-workspace T"]
 
-# [N]otes
-[[on-window-detected]]
-    if.app-id = "md.obsidian"
-    run = ["move-node-to-workspace N"]
-
 # Floating windows
-
 [[on-window-detected]]
     if.app-id = "cc.ffitch.shottr"
     run = "layout floating"
@@ -223,4 +227,8 @@ accordion-padding = 24
 
 [[on-window-detected]]
     if.app-id = "com.obsproject.obs-studio"
+    run = "layout floating"
+
+[[on-window-detected]]
+    if.app-id = "com.bitwarden.desktop"
     run = "layout floating"
