@@ -1,5 +1,28 @@
+tap "withgraphite/tap"
+
+# Allows you to manage your stacked changes and submit them for review on GitHub
+brew "withgraphite/tap/graphite", trusted: true
+
+# Manage team projects and tasks
+cask "asana"
+# Desktop password and login vault
+cask "bitwarden"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code"
+# Web browser focusing on privacy
+cask "duckduckgo"
 # Collaborative team software
 cask "figma"
+# App to manage access to corporate apps, data, and resources
+cask "intune-company-portal"
+# Open-source, self-hosted Slack-alternative
+cask "mattermost"
+# Provides updates to various Microsoft products
+cask "microsoft-auto-update"
+# Email client
+cask "microsoft-outlook"
 # Open-source software for live streaming and screen recording
 cask "obs"
 # Video communication and virtual meeting platform

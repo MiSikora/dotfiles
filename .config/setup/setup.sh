@@ -296,15 +296,6 @@ else
   success "Node $node_version already installed"
 fi
 
-while read -r package; do
-  npm i -g "$package"
-done <"$XDG_CONFIG_HOME/nvm/packages"
-
-section "rust setup"
-
-rustup-init -y --no-modify-path
-rustup component add rust-analyzer
-
 section "zsh setup"
 
 brew_zsh="$(brew --prefix)/bin/zsh"

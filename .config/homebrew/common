@@ -1,11 +1,11 @@
-tap "anomalyco/tap"
-tap "buo/cask-upgrade"
-tap "graalvm/tap"
-tap "mdogan/zulu"
-tap "nikitabobko/tap"
+tap "anomalyco/tap", trusted: true
+tap "buo/cask-upgrade", trusted: true
+tap "graalvm/tap", trusted: true
+tap "mdogan/zulu", trusted: true
+tap "nikitabobko/tap", trusted: true
 
 # The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
+brew "anomalyco/tap/opencode", trusted: true
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -105,22 +105,22 @@ cask "espanso"
 cask "firefox"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-cask "graalvm/tap/graalvm-jdk21"
-cask "graalvm/tap/graalvm-jdk25"
+cask "graalvm/tap/graalvm-jdk21", trusted: true
+cask "graalvm/tap/graalvm-jdk25", trusted: true
 # JetBrains tools manager
 cask "jetbrains-toolbox"
 # Keyboard customiser
 cask "karabiner-elements"
-# Media key forwarder for iTunes and Spotify
+# Media key forwarder for Apple Music and Spotify
 cask "macmediakeyforwarder"
 # OpenJDK distribution from Azul
-cask "mdogan/zulu/zulu-jdk17"
+cask "mdogan/zulu/zulu-jdk17", trusted: true
 # OpenJDK distribution from Azul
-cask "mdogan/zulu/zulu-jdk21"
+cask "mdogan/zulu/zulu-jdk21", trusted: true
 # OpenJDK distribution from Azul
-cask "mdogan/zulu/zulu-jdk25"
+cask "mdogan/zulu/zulu-jdk25", trusted: true
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "nikitabobko/tap/aerospace"
+cask "nikitabobko/tap/aerospace", trusted: true
 # Control your tools with a few keystrokes
 cask "raycast"
 # Screenshot measurement and annotation tool
@@ -131,3 +131,9 @@ cask "spotify"
 cask "ticktick"
 # Multimedia player
 cask "vlc"
+
+npm "@typescript/native-preview"
+npm "bash-language-server"
+npm "corepack"
+npm "vscode-langservers-extracted"
+npm "yaml-language-server"
