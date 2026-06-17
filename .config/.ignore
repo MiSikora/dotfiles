@@ -12,6 +12,7 @@ nvm/*
 zsh/*
 !zsh/.zshrc
 !zsh/.zprofile
+!zsh/.zshenv
 !zsh/fzf.zsh
 !.ignore
 opencode/*

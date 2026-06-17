@@ -1,14 +1,5 @@
 #!/usr/bin/env zsh
 
-# Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Homebrew casks
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-
-# Homebrew config
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
-
 # Dotfiles profile
 unset DOTFILES_PROFILE HOMEBREW_DOTFILES_PROFILE
 
@@ -26,6 +17,21 @@ if [[ -r "$XDG_CONFIG_HOME/profile" ]]; then
     ;;
   esac
 fi
+
+# Private environment
+set -a
+[[ -r "$XDG_CONFIG_HOME/secret/common.env" ]] && source "$XDG_CONFIG_HOME/secret/common.env"
+[[ -n "$DOTFILES_PROFILE" && -r "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env" ]] && source "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env"
+set +a
+
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Homebrew casks
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
+# Homebrew config
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
 
 # Git config
 export GIT_CONFIG_GLOBAL="$XDG_CONFIG_HOME/git/config"
@@ -51,10 +57,6 @@ path=(
 # Java defaults
 source <(jdk 25 graal)
 source <(jdk 25)
-
-# Private environment
-[[ -r "$XDG_CONFIG_HOME/secret/common.env" ]] && source "$XDG_CONFIG_HOME/secret/common.env"
-[[ -n "$DOTFILES_PROFILE" && -r "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env" ]] && source "$XDG_CONFIG_HOME/secret/$DOTFILES_PROFILE.env"
 
 # rbenv
 eval "$(rbenv init - --no-rehash zsh)"
