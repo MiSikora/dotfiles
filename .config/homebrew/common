@@ -1,11 +1,8 @@
-tap "anomalyco/tap", trusted: true
 tap "buo/cask-upgrade", trusted: true
 tap "graalvm/tap", trusted: true
 tap "mdogan/zulu", trusted: true
 tap "nikitabobko/tap", trusted: true
 
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode", trusted: true
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
