@@ -23,6 +23,8 @@ brew "fd"
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
+brew "gh"
 # GIF image/animation creator/editor
 brew "gifsicle"
 # Distributed revision control system
@@ -43,6 +45,8 @@ brew "imagemagick"
 brew "jadx"
 # JQ clone focussed on correctness, speed, and simplicity
 brew "jaq"
+# TIFF library and utilities
+brew "libtiff"
 # Clone of ls with colorful output, file type icons, and more
 brew "lsd"
 # Language Server for the Lua language
