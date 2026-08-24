@@ -205,6 +205,27 @@ else
   success "GitHub token already imported"
 fi
 
+section "gh setup"
+
+gh_extensions=(
+  "github/gh-stack"
+)
+
+for gh_extension in "${gh_extensions[@]}"; do
+  if gh extension list | grep -Fq "$gh_extension"; then
+    success "gh extension $gh_extension already installed"
+  else
+    info "Installing gh extension $gh_extension"
+    gh extension install "$gh_extension"
+
+    if ! gh extension list | grep -Fq "$gh_extension"; then
+      fail "Failed to install gh extension $gh_extension"
+    else
+      success "gh extension $gh_extension installed"
+    fi
+  fi
+done
+
 section "fzf-git setup"
 
 fzf_git_dir="$XDG_CONFIG_HOME/fzf/fzf-git"
