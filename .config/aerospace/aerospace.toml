@@ -55,6 +55,7 @@ accordion-padding = 24
     ctrl-alt-cmd-shift-n = "workspace N"
     ctrl-alt-cmd-shift-s = "workspace S"
     ctrl-alt-cmd-shift-t = "workspace T"
+    ctrl-alt-cmd-shift-z = "workspace Z"
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = "workspace-back-and-forth"
@@ -88,6 +89,7 @@ accordion-padding = 24
     ctrl-alt-cmd-n = "move-node-to-workspace N"
     ctrl-alt-cmd-s = "move-node-to-workspace S"
     ctrl-alt-cmd-t = "move-node-to-workspace T"
+    ctrl-alt-cmd-z = "move-node-to-workspace Z"
 
     # Change window position
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
@@ -207,6 +209,11 @@ accordion-padding = 24
 [[on-window-detected]]
     if.app-id = "com.linear"
     run = ["move-node-to-workspace T"]
+
+# [Z]
+[[on-window-detected]]
+    if.app-id = "us.zoom.xos"
+    run = ["move-node-to-workspace Z"]
 
 # Floating windows
 [[on-window-detected]]
