@@ -39,6 +39,8 @@ bindkey -s ^f "tmux_session pick\n"
 bindkey -s ^h "tmux_session switch $HOME\n"
 bindkey -s ^n "tmux_session switch $XDG_CONFIG_HOME\n"
 
+export GH_STACK_BACKGROUND='terminal'
+
 # Dotfiles git
 git() {
   local current_dir=$PWD
