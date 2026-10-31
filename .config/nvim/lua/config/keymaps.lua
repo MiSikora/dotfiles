@@ -25,3 +25,13 @@ vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines without jump" })
 
 -- Redo with U
 vim.keymap.set("n", "U", "<C-r>", { desc = "Redo" })
+
+-- Jump between errors only ([d and ]d cover all severities)
+local function diagnostic_jump(count)
+  return function()
+    vim.diagnostic.jump({ count = count, severity = vim.diagnostic.severity.ERROR })
+  end
+end
+
+vim.keymap.set("n", "[e", diagnostic_jump(-1), { desc = "Previous Error" })
+vim.keymap.set("n", "]e", diagnostic_jump(1), { desc = "Next Error" })

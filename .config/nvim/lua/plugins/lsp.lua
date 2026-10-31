@@ -35,26 +35,16 @@ return {
           })
         end
 
-        map("grn", vim.lsp.buf.rename, "Rename")
+        -- Keep Neovim's default LSP keys (:help lsp-defaults) but route list
+        -- results to Telescope and code actions to tiny-code-action for previews.
+        -- Single-result keys (grn, grD, K, ...) stay builtin.
         map("gra", require("tiny-code-action").code_action, "Open Code Action")
+        map("grr", telescope.lsp_references, "Goto References")
+        map("gri", telescope.lsp_implementations, "Goto Implementation")
+        map("grd", telescope.lsp_definitions, "Goto Definition")
+        map("grt", telescope.lsp_type_definitions, "Goto Type Definition")
         map("gO", telescope.lsp_document_symbols, "Open Document Symbols")
         map("gW", telescope.lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
-        map("grr", telescope.lsp_references, "[G]oto [R]eferences")
-        map("gri", telescope.lsp_implementations, "[G]oto [I]mplementation")
-        map("grd", telescope.lsp_definitions, "[G]oto [D]efinition")
-        map("grt", telescope.lsp_type_definitions, "[G]oto [T]ype Definition")
-        map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-
-        local diagnostic_jump = function(count, severity)
-          return function()
-            vim.diagnostic.jump({ count = count, severity = severity })
-          end
-        end
-
-        map("[d", diagnostic_jump(-1), "Previous Diagnostic")
-        map("]d", diagnostic_jump(1), "Next Diagnostic")
-        map("[e", diagnostic_jump(-1, vim.diagnostic.severity.ERROR), "Previous Error")
-        map("]e", diagnostic_jump(1, vim.diagnostic.severity.ERROR), "Next Error")
       end,
     })
   end,

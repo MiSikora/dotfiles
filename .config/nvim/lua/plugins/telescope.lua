@@ -104,6 +104,7 @@ return {
   deps = {
     { src = "nvim-lua/plenary.nvim" },
     { src = "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    { src = "nvim-telescope/telescope-ui-select.nvim" },
   },
   config = function()
     local telescope = require("telescope")
@@ -121,9 +122,14 @@ return {
       },
       extensions = {
         fzf = {},
+        -- Route vim.ui.select (code actions, etc.) through Telescope
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown(),
+        },
       },
     })
     telescope.load_extension("fzf")
+    telescope.load_extension("ui-select")
 
     vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope: [F]ind [F]iles" })
     vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope: [F]ind [H]elp" })
