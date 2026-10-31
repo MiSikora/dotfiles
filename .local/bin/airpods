@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+AIRPODS_UUID="70-F9-4A-B8-9D-B0"
+
+SwitchAudioSource -t output -u "$AIRPODS_UUID:output"
+SwitchAudioSource -t input -u "$AIRPODS_UUID:input"
