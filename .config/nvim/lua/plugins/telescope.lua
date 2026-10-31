@@ -100,7 +100,6 @@ end
 
 return {
   src = "nvim-telescope/telescope.nvim",
-  version = "0.1.8",
   deps = {
     { src = "nvim-lua/plenary.nvim" },
     { src = "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
