@@ -1,3 +1,6 @@
+# https://nikitabobko.github.io/AeroSpace/guide#config-version
+config-version = 2
+
 start-at-login = true
 
 # https://nikitabobko.github.io/AeroSpace/guide#normalization
@@ -8,6 +11,12 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 automatically-unhide-macos-hidden-apps = true
 
 accordion-padding = 24
+
+# Workspaces that stay alive while empty (one per key binding below)
+persistent-workspaces = [
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "A", "B", "C", "E", "F", "I", "M", "N", "S", "T", "Z",
+]
 
 [gaps]
     inner.horizontal = 8
@@ -152,17 +161,13 @@ accordion-padding = 24
     if.app-id = "com.anthropic.claudefordesktop"
     run = ["move-node-to-workspace C"]
 
-[[on-window-detected]]
-    if.app-id = "com.openai.chat"
-    run = ["move-node-to-workspace C"]
-
 # [I]
 [[on-window-detected]]
     if.app-id = "com.google.android.studio"
     run = ["move-node-to-workspace I"]
 
 [[on-window-detected]]
-    if.app-id = "com.jetbrains.intellij.ce"
+    if.app-id = "com.jetbrains.intellij"
     run = ["move-node-to-workspace I"]
 
 # [M]
@@ -204,10 +209,6 @@ accordion-padding = 24
 # [T]
 [[on-window-detected]]
     if.app-id = "com.electron.asana"
-    run = ["move-node-to-workspace T"]
-
-[[on-window-detected]]
-    if.app-id = "com.linear"
     run = ["move-node-to-workspace T"]
 
 # [Z]
