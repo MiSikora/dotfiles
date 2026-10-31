@@ -6,7 +6,6 @@ if [[ $# -lt 1 ]]; then
   exit 1
 fi
 
-# source "$ZDOTDIR/.zprofile"
 
 if [[ -z ${HOMEBREW_PREFIX:-} ]]; then
   echo "HOMEBREW_PREFIX must be set" >&2

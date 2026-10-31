@@ -53,9 +53,9 @@ mkdir -p "./res/drawable-ldpi"
 
 FILENAME=$(basename "$IMAGE" | cut -d. -f1)
 
-magick "${IMAGE}" -scale "100%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xxxhdpi/$FILENAME.webp"
-magick "${IMAGE}" -scale "75%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xxhdpi/$FILENAME.webp"
-magick "${IMAGE}" -scale "50%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-xhdpi/$FILENAME.webp"
-magick "${IMAGE}" -scale "37.5%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-hdpi/$FILENAME.webp"
-magick "${IMAGE}" -scale "25%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-mdpi/$FILENAME.webp"
-magick "${IMAGE}" -scale "18.75%" -quality "${QUALITY}" -define "webp:lossess=true" "./res/drawable-ldpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "100%" -quality "${QUALITY}" "./res/drawable-xxxhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "75%" -quality "${QUALITY}" "./res/drawable-xxhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "50%" -quality "${QUALITY}" "./res/drawable-xhdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "37.5%" -quality "${QUALITY}" "./res/drawable-hdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "25%" -quality "${QUALITY}" "./res/drawable-mdpi/$FILENAME.webp"
+magick "${IMAGE}" -scale "18.75%" -quality "${QUALITY}" "./res/drawable-ldpi/$FILENAME.webp"
