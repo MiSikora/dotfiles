@@ -8,6 +8,7 @@ return {
       end,
       spec = {
         { "<leader>f", group = "Find" },
+        { "<leader>g", group = "Git" },
         { "<leader>t", group = "Tmux" },
       },
     })
