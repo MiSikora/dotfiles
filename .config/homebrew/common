@@ -38,6 +38,8 @@ brew "git-lfs"
 brew "gnupg"
 # Tool for glamorous shell scripts
 brew "gum"
+# Command-line benchmarking tool
+brew "hyperfine"
 # Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Dex to Java decompiler
@@ -82,10 +84,10 @@ brew "sqlite"
 brew "stylua"
 # Terminal multiplexer
 brew "tmux"
-# Parser generator tool
-brew "tree-sitter-cli"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Parser generator tool
+brew "tree-sitter-cli"
 # Internet file retriever
 brew "wget"
 # UNIX shell (command interpreter)
