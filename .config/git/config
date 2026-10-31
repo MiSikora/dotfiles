@@ -10,6 +10,7 @@
 	defaultBranch = trunk
 [commit]
 	gpgsign = true
+	verbose = true
 [credential]
 	helper = osxkeychain
 [interactive]
@@ -26,9 +27,27 @@
 	required = true
 [rerere]
 	enabled = true
+	autoupdate = true
 [column]
 	ui = auto
 [branch]
 	sort = -committerdate
 [push]
-  autoSetupRemote = true
+	autoSetupRemote = true
+[fetch]
+	prune = true
+	pruneTags = true
+[pull]
+	rebase = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+[tag]
+	sort = version:refname
+[help]
+	autocorrect = prompt
