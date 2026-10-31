@@ -111,7 +111,7 @@ if ! command -v brew >/dev/null 2>&1; then
   else
     info "Disabling Homebrew analytics"
     brew analytics off
-    brew trust buo/cask-upgrade graalvm/tap mdogan/zulu nikitabobko/tap
+    brew trust graalvm/tap mdogan/zulu nikitabobko/tap
     success "Homebrew installed"
   fi
 else

@@ -71,7 +71,7 @@ airlock() {
   open -a AeroSpace
 }
 
-alias bsync="brew update && brew upgrade && brew cu --all --cleanup --yes && brew bundle --verbose --global --force cleanup"
+alias bsync="brew update && brew upgrade --greedy && brew bundle --verbose --global --force cleanup"
 alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
 alias fzfa="atuin history list --cmd-only | fzf"
 
