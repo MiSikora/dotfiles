@@ -76,9 +76,6 @@ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
 ###############################################################################
 
-# Increase sound quality for Bluetooth headphones/headsets
-defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
-
 # Enable full keyboard access for all controls
 # (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
@@ -107,10 +104,11 @@ defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture 
 defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 0
 
 # Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en-US"
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "pl-PL"
 defaults write NSGlobalDomain AppleLocale -string "en_US@currency=EUR"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
 
 # Set keyboard layout
 defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string "com.apple.keylayout.PolishPro"
@@ -122,17 +120,6 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bo
 
 # Use Fn keys by default
 defaults write NSGlobalDomain com.apple.keyboard.fnState -int 1
-
-###############################################################################
-# Screen                                                                      #
-###############################################################################
-
-# Enable subpixel font rendering on non-Apple LCDs
-# Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
-defaults write NSGlobalDomain AppleFontSmoothing -int 1
-
-# Enable HiDPI display modes (requires restart)
-sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
 
 ################################################################################
 ## Finder                                                                      #
@@ -248,9 +235,6 @@ defaults write com.apple.dock autohide -bool true
 
 # Don’t show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
-
-# Disable the Launchpad gesture (pinch with thumb and three fingers)
-defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
 
 # Disable hot corners
 defaults write com.apple.dock wvous-tl-corner -int 0
