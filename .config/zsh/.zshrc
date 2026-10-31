@@ -17,6 +17,12 @@ source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
 # Keep zsh line editing in emacs mode even though EDITOR is nvim.
 bindkey -e
 
+# Completion
+autoload -Uz compinit
+[[ -d "$XDG_CACHE_HOME/zsh" ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
+compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+
 # Interactive plugins
 source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
