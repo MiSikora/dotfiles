@@ -7,7 +7,7 @@ font-size = 20
 # Disable ligatures
 font-feature = -calt
 font-feature = -liga
-font-feature = -dlic
+font-feature = -dlig
 
 macos-titlebar-style = hidden
 mouse-hide-while-typing = true
@@ -17,6 +17,9 @@ window-padding-x = 8
 window-padding-y = 8,0
 
 confirm-close-surface = false
+
+# Homebrew (bsync) owns updates
+auto-update = off
 
 # Global terminal
 keybind = global:option+space=toggle_quick_terminal
