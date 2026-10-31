@@ -1,4 +1,0 @@
-filter_class: "^org\\.mozilla\\.firefox$"
-extra_includes:
-  - "../match/_firefox.yml"
-
