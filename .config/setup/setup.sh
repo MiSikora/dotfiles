@@ -125,7 +125,8 @@ section "Dotfiles git repository setup"
 if [[ ! -d "$DOTFILES_GIT" ]]; then
   info "Cloning dotfiles git repository"
   command git clone --bare https://github.com/MiSikora/dotfiles.git "$DOTFILES_GIT"
-  command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" checkout trunk
+  # Force: the bootstrap tarball already placed identical copies of these files
+  command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" checkout -f trunk
   success "Dotfiles git repository cloned"
 else
   success "Dotfiles git repository already exists"

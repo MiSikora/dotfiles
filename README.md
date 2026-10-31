@@ -1,50 +1,77 @@
 ## Initial configuration
 
+Have the git-crypt key ready as `~/dotfiles.pgp`, then:
+
 ```
 curl -sL https://github.com/MiSikora/dotfiles/archive/HEAD.tar.gz | tar xz -C ~ --strip-component=1
-source .zshenv && source "$ZDOTDIR/.zprofile"
-chmod +x ~/.config/setup/setup.sh && sh ~/.config/setup/setup.sh
+bash ~/.config/setup/setup.sh
 ```
+
+The script asks for the profile (`home` or `work`), installs the Xcode Command Line Tools and
+Homebrew, runs the Brewfile for the profile, clones the dotfiles as a bare repository, imports the
+GPG keys and decrypts `~/.config/secret`, installs `gh-stack`, `fzf-git` and `tpm`, pins Ruby,
+Python, Node and Rust, and makes Homebrew's zsh the login shell. Open a new terminal afterwards.
+
+Neovim installs its plugins and tree-sitter parsers on first start.
 
 ## macOS config
 
-Give the new terminal emulator Full Disk Access from the System Settings and run:
+Give the terminal Full Disk Access in **System Settings > Privacy & Security** and run:
 
 ```
-sh ~/.config/setup/macos.sh
+bash ~/.config/setup/macos.sh
 ```
+
+Some settings need a logout or restart to apply.
+
+## Permissions
+
+Grant these in **System Settings > Privacy & Security** when the apps ask:
+
+- AeroSpace: Accessibility
+- Karabiner-Elements: Input Monitoring (and approve the driver extension)
+- Espanso: Accessibility
+- Shottr: Screen Recording
+- Raycast: Accessibility, Files and Folders
 
 ## Raycast
 
-1. Open Raycast.
-2. Enable option to open it at login.
-3. Enable option to use emoji picker.
-4. Grant access to Files and Folders.
-5. Go to Raycast settings.
-6. Import configuration from `~/.config/raycast/config.rayconfig`.
-7. Go to **System Preferences > Keyboard**.
-8. Disable Emoji picker on Globe key.
-9. Go to **System Preferences > Keyboard > Shortcuts > Spotlight**.
-10. Disable Spotlight's keyboard shortcut.
-11. Drag and drop (⌘) Spotlight's menu bar icon to remove it.
+1. Open Raycast and enable launch at login.
+2. Import the configuration from `~/.config/raycast/config.rayconfig`.
+3. Go to **System Settings > Keyboard** and set the Globe key to do nothing.
+4. Go to **System Settings > Keyboard > Keyboard Shortcuts > Spotlight** and disable the shortcut.
+5. Hold ⌘ and drag the Spotlight icon out of the menu bar.
 
 ## Apps to configure
 
-- Karabiner-Elements
+### Common
+
 - 1Password
-- Mullvad
-- Shottr (Meta+P hotkey)
-- Firefox
-- Espanso
-- JetBrains Toolbox
-- Capture One
-- Affinity
-- Email
 - Calendar
-- Messages
-- WhatsApp
-- Messenger
-- Slack
-- Spotify
-- Pocket Casts
+- DuckDuckGo
+- Firefox
+- JetBrains Toolbox
 - Mac Media Key Forwarder
+- Mail
+- Messages
+- Shottr (Meta+P hotkey)
+- Spotify
+
+### Home
+
+- Affinity
+- Capture One
+- Messenger
+- Pocket Casts
+- Slack
+- WhatsApp
+
+### Work
+
+- Asana
+- Bitwarden
+- Claude
+- Figma
+- Mattermost
+- Outlook
+- Zoom
