@@ -31,7 +31,7 @@ source "$ZDOTDIR/fzf.zsh"
 [[ -t 0 ]] && stty -ixon
 
 # Atuin history widgets (atuin owns history; don't persist zsh's own)
-eval "$(atuin init zsh)"
+evalcache atuin init zsh
 unset HISTFILE
 SAVEHIST=0
 
@@ -71,7 +71,7 @@ airlock() {
   open -a AeroSpace
 }
 
-alias bsync="brew update && brew upgrade --greedy && brew bundle --verbose --global --force cleanup && brew autoremove && brew cleanup --prune=all"
+alias bsync="brew update && brew upgrade --greedy && brew bundle --verbose --global --force cleanup && brew autoremove && brew cleanup --prune=all && evalcache_clear"
 alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
 alias fzfa="atuin history list --cmd-only | fzf"
 

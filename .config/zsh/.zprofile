@@ -25,7 +25,7 @@ set -a
 set +a
 
 # Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+evalcache /opt/homebrew/bin/brew shellenv
 
 # Homebrew config
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
@@ -52,20 +52,27 @@ path=(
   $path
 )
 
-# Java defaults (jdk prints the export lines for the requested version)
+# Java defaults (JDK bundle paths are predictable; `jdk` switches versions by hand)
 if [[ -n "${DOTFILES_JAVA_VERSION:-}" ]]; then
-  source <(jdk "$DOTFILES_JAVA_VERSION" graal)
-  source <(jdk "$DOTFILES_JAVA_VERSION")
+  java_home="/Library/Java/JavaVirtualMachines/zulu-$DOTFILES_JAVA_VERSION.jdk/Contents/Home"
+  graalvm_home="/Library/Java/JavaVirtualMachines/graalvm-jdk-$DOTFILES_JAVA_VERSION/Contents/Home"
+  [[ -d "$java_home" ]] && export JAVA_HOME="$java_home"
+  [[ -d "$graalvm_home" ]] && export GRAALVM_HOME="$graalvm_home"
+  unset java_home graalvm_home
 fi
 
 # rbenv
-eval "$(rbenv init - --no-rehash zsh)"
+evalcache rbenv init - --no-rehash zsh
 
 # pyenv
-eval "$(pyenv init - --no-rehash zsh)"
+evalcache pyenv init - --no-rehash zsh
 
 # nvm
-# Skip `nvm use default` at startup (slow) and put the default Node on PATH directly
+# The default Node goes on PATH directly; nvm itself loads on first use
 export NVM_DIR="$HOME/.nvm"
-[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" --no-use
 [[ -r "$XDG_CONFIG_HOME/nvm/version" ]] && path=("$NVM_DIR/versions/node/v$(<"$XDG_CONFIG_HOME/nvm/version")/bin" $path)
+nvm() {
+  unfunction nvm
+  source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" --no-use
+  nvm "$@"
+}

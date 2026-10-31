@@ -18,3 +18,24 @@ export MANPAGER="nvim +Man!"
 
 # Shell sessions
 export SHELL_SESSIONS_DISABLE=1
+
+# Source the cached output of a slow init command instead of running it every time
+# (bsync clears the cache)
+evalcache() {
+  local dir="$XDG_CACHE_HOME/zsh/evalcache"
+  local name="${(j:_:)@}"
+  local file="$dir/${name//[^A-Za-z0-9_.-]/_}.zsh"
+
+  if [[ ! -s "$file" ]]; then
+    [[ -d "$dir" ]] || mkdir -p "$dir"
+    "$@" >"$file" || { rm -f "$file"; return 1 }
+  fi
+
+  source "$file"
+}
+
+evalcache_clear() {
+  local dir="$XDG_CACHE_HOME/zsh/evalcache"
+  [[ -d "$dir" ]] && rm -r -- "$dir"
+  return 0
+}
