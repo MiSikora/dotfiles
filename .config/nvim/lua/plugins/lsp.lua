@@ -18,7 +18,7 @@ return {
     })
     vim.lsp.enable("pylsp")
     vim.lsp.enable("rust_analyzer")
-    vim.lsp.enable("tsgo")
+    vim.lsp.enable("tsc")
     vim.lsp.enable("yamlls")
 
     vim.api.nvim_create_autocmd("LspAttach", {
