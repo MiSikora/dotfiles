@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu
+set -euo pipefail
 
 # Match what zsh/.zshenv and zsh/.zprofile set, for a fresh machine without them
 : "${XDG_CONFIG_HOME:=$HOME/.config}"
