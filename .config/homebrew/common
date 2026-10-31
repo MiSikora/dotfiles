@@ -82,6 +82,8 @@ brew "showkey"
 brew "sqlite"
 # Opinionated Lua code formatter
 brew "stylua"
+# Change macOS audio source from the command-line
+brew "switchaudio-osx"
 # Terminal multiplexer
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
