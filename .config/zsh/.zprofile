@@ -63,9 +63,11 @@ source <(jdk_auto)
 eval "$(rbenv init - --no-rehash zsh)"
 
 # pyenv
-eval "$(pyenv init - zsh)"
+eval "$(pyenv init - --no-rehash zsh)"
 
 # nvm
+# Skip `nvm use default` at startup (slow) and put the default Node on PATH directly
 export NVM_DIR="$HOME/.nvm"
-[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" --no-use
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+[[ -r "$XDG_CONFIG_HOME/nvm/version" ]] && path=("$NVM_DIR/versions/node/v$(<"$XDG_CONFIG_HOME/nvm/version")/bin" $path)
