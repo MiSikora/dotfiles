@@ -68,11 +68,19 @@ evalcache rbenv init - --no-rehash zsh
 evalcache pyenv init - --no-rehash zsh
 
 # nvm
-# The default Node goes on PATH directly; nvm itself loads on first use
+# Fast path: the pinned Node goes on PATH directly and nvm loads on first use.
+# Fallback: load nvm fully so Node still works when the pinned version is missing.
 export NVM_DIR="$HOME/.nvm"
-[[ -r "$XDG_CONFIG_HOME/nvm/version" ]] && path=("$NVM_DIR/versions/node/v$(<"$XDG_CONFIG_HOME/nvm/version")/bin" $path)
-nvm() {
-  unfunction nvm
-  source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" --no-use
-  nvm "$@"
-}
+node_bin="$NVM_DIR/versions/node/v$(<"$XDG_CONFIG_HOME/nvm/version")/bin"
+if [[ -d "$node_bin" ]]; then
+  path=("$node_bin" $path)
+  nvm() {
+    unfunction nvm
+    source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" --no-use
+    nvm "$@"
+  }
+else
+  print -u2 "Node $(<"$XDG_CONFIG_HOME/nvm/version") is not installed, run: nvm_update $(<"$XDG_CONFIG_HOME/nvm/version")"
+  source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+fi
+unset node_bin
