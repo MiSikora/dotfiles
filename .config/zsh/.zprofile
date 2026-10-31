@@ -45,18 +45,21 @@ export DOTFILES_GIT="$HOME/projects/dotfiles.git"
 # Android SDK
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 
-# Preferred tools
+# Preferred tools (user bin first: path_helper moved it to the end)
 typeset -U path PATH
 path=(
+  "$XDG_LOCAL_HOME/bin"
   "$HOMEBREW_PREFIX/opt/sqlite/bin"
   "$HOMEBREW_PREFIX/opt/curl/bin"
   "$HOMEBREW_PREFIX/opt/rustup/bin"
   $path
 )
 
-# Java defaults
-source <(jdk_auto graal)
-source <(jdk_auto)
+# Java defaults (jdk prints the export lines for the requested version)
+if [[ -n "${DOTFILES_JAVA_VERSION:-}" ]]; then
+  source <(jdk "$DOTFILES_JAVA_VERSION" graal)
+  source <(jdk "$DOTFILES_JAVA_VERSION")
+fi
 
 # rbenv
 eval "$(rbenv init - --no-rehash zsh)"
