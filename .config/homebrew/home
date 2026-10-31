@@ -1,7 +1,5 @@
 # Image editing and design software
 cask "affinity"
-# VPN client
-cask "mullvad-vpn"
 # Team communication and collaboration software
 cask "slack"
 # Video game digital distribution service

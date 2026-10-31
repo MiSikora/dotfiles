@@ -102,6 +102,8 @@ cask "1password"
 cask "android-commandlinetools"
 # Android SDK component
 cask "android-platform-tools"
+# Web browser focusing on privacy
+cask "duckduckgo"
 # Cross-platform Text Expander written in Rust
 cask "espanso"
 # Web browser
