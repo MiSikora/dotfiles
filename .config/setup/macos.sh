@@ -19,6 +19,15 @@ while true; do
 done 2>/dev/null &
 
 ###############################################################################
+# sudo                                                                        #
+###############################################################################
+
+# Show asterisks when typing the sudo password
+echo "Defaults pwfeedback" | sudo tee /etc/sudoers.d/pwfeedback >/dev/null
+sudo chmod 440 /etc/sudoers.d/pwfeedback
+sudo visudo -c -f /etc/sudoers.d/pwfeedback >/dev/null
+
+###############################################################################
 # General UI/UX                                                               #
 ###############################################################################
 
