@@ -1,7 +1,15 @@
--- Clear search highlight
-vim.keymap.set("n", "<Esc>", "<cmd>noh<CR>", {
+-- Clear search highlight and close the LSP hover/diagnostic float, if any
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd.nohlsearch()
+
+  local float = vim.b.lsp_floating_preview
+  if float and vim.api.nvim_win_is_valid(float) then
+    vim.api.nvim_win_close(float, false)
+  end
+end, {
   noremap = true,
   silent = true,
+  desc = "Clear search highlight and close float",
 })
 
 -- Remove <Space>, <Backspace>, and <Enter> navigation
