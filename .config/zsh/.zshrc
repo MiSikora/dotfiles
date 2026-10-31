@@ -30,8 +30,10 @@ source "$ZDOTDIR/fzf.zsh"
 # Allow Ctrl-S for fzf-git stashes
 [[ -t 0 ]] && stty -ixon
 
-# Atuin history widgets
+# Atuin history widgets (atuin owns history; don't persist zsh's own)
 eval "$(atuin init zsh)"
+unset HISTFILE
+SAVEHIST=0
 
 # Word navigation
 WORDCHARS=${WORDCHARS//[\/]}
