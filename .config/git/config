@@ -49,5 +49,6 @@
 	mnemonicPrefix = true
 [tag]
 	sort = version:refname
+	gpgSign = true
 [help]
 	autocorrect = prompt
