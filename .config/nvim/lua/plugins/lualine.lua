@@ -7,10 +7,6 @@ return {
     require("lualine").setup({
       options = {
         theme = "catppuccin-nvim",
-        refresh = {
-          statusline = 8,
-        },
-        disabled_filetypes = { "no-neck-pain" },
       },
       sections = {
         lualine_b = {
@@ -21,7 +17,7 @@ return {
           {
             "filename",
             symbols = {
-              modifed = "",
+              modified = "",
               readonly = "",
               unnamed = "",
             },
