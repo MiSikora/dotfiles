@@ -12,16 +12,10 @@ from typing import NoReturn
 
 
 class FormulaType(StrEnum):
-    # Every entry type `brew bundle dump` can emit on macOS, in Brewfile section order
+    # Only what Homebrew itself manages; language package managers have their own sync scripts
     TAP = "tap"
     BREW = "brew"
     CASK = "cask"
-    MAS = "mas"
-    NPM = "npm"
-    CARGO = "cargo"
-    GO = "go"
-    UV = "uv"
-    VSCODE = "vscode"
 
     @property
     def order(self) -> int:
@@ -416,7 +410,9 @@ def parse_formulas(content: str, source_name: str) -> list[Formula]:
         try:
             formula_type = FormulaType(formula_type_name)
         except ValueError:
-            fail(f"Unsupported Brewfile line at {source_name}:{line_number}: {line}")
+            # npm, cargo, ... entries from `brew bundle dump` are not managed here
+            comment_lines = []
+            continue
 
         formulas.append(
             Formula(

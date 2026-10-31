@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Update everything: Homebrew first, then each language package manager
+for sync in brew_sync npm_sync pip_sync gem_sync rust_sync; do
+  printf "\n\033[1;33m%s\033[0m\n" "$sync"
+  "$sync"
+done

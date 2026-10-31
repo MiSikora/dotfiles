@@ -354,6 +354,38 @@ else
   success "rust-analyzer already installed"
 fi
 
+section "Packages setup"
+
+install_packages() {
+  local name="$1"
+  local file="$2"
+  shift 2
+  local packages=()
+
+  if [[ -r "$file" ]]; then
+    while IFS= read -r package; do
+      [[ -z "$package" || "$package" == \#* ]] && continue
+      packages+=("$package")
+    done <"$file"
+  fi
+
+  if [[ ${#packages[@]} -eq 0 ]]; then
+    success "No $name packages to install"
+    return 0
+  fi
+
+  info "Installing $name packages: ${packages[*]}"
+  "$@" "${packages[@]}"
+  success "$name packages installed"
+}
+
+install_packages npm "$XDG_CONFIG_HOME/nvm/packages" npm install -g
+install_packages pip "$XDG_CONFIG_HOME/pyenv/packages" pip install
+install_packages gem "$XDG_CONFIG_HOME/rbenv/packages" gem install
+install_packages cargo "$XDG_CONFIG_HOME/cargo/packages" cargo install
+pyenv rehash
+rbenv rehash
+
 section "zsh setup"
 
 brew_zsh="$(brew --prefix)/bin/zsh"

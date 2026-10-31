@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Update every global npm package (npm itself included) of the active Node
+npm update -g

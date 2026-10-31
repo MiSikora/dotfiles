@@ -31,8 +31,12 @@ if [[ $(nvm alias default) == *"$node_version"* ]]; then
   exit 0
 fi
 
-# Install the specified Node version
-nvm install "$node_version"
+# Install the specified Node version, carrying global packages over from the current default
+if previous_version="$(nvm version default 2>/dev/null)" && [[ "$previous_version" != "N/A" ]]; then
+  nvm install "$node_version" --reinstall-packages-from="$previous_version"
+else
+  nvm install "$node_version"
+fi
 nvm alias default "$node_version"
 
 # Save the version to the version file

@@ -5,7 +5,9 @@ captureone/*
 gnupg/*
 karabiner/*
 pyenv/*
+!pyenv/packages
 rbenv/*
+!rbenv/packages
 nvim/nvim-pack-lock.json
 nvm/*
 !nvm/packages
@@ -15,6 +17,3 @@ zsh/*
 !zsh/.zshenv
 !zsh/fzf.zsh
 !.ignore
-opencode/*
-!opencode/AGENTS.MD
-!opencode/opencode.json

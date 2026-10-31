@@ -1,0 +1,6 @@
+@typescript/native-preview
+bash-language-server
+corepack
+prettier
+vscode-langservers-extracted
+yaml-language-server

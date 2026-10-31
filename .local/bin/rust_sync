@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Update the toolchain and its components (rust-analyzer, rustfmt, clippy, ...)
+rustup update

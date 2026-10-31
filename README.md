@@ -10,7 +10,13 @@ bash ~/.config/setup/setup.sh
 The script asks for the profile (`home` or `work`), installs the Xcode Command Line Tools and
 Homebrew, runs the Brewfile for the profile, clones the dotfiles as a bare repository, imports the
 GPG keys and decrypts `~/.config/secret`, installs `gh-stack`, `fzf-git` and `tpm`, pins Ruby,
-Python, Node and Rust, and makes Homebrew's zsh the login shell. Open a new terminal afterwards.
+Python, Node and Rust, installs the global packages listed in `~/.config/{nvm,pyenv,rbenv,cargo}/packages`,
+and makes Homebrew's zsh the login shell. Open a new terminal afterwards.
+
+## Updating
+
+`psync` updates everything: Homebrew (`brew_sync`), then global npm, pip, gem and Rust packages
+(`npm_sync`, `pip_sync`, `gem_sync`, `rust_sync`). Each script can also be run on its own.
 
 Neovim installs its plugins and tree-sitter parsers on first start.
 

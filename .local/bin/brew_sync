@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z ${XDG_CACHE_HOME:-} ]]; then
+  echo "XDG_CACHE_HOME must be set" >&2
+  exit 1
+fi
+
+brew update
+brew upgrade --greedy
+brew bundle --global
+brew bundle --global --force cleanup --formula --cask --tap
+brew autoremove
+brew cleanup --prune=all
+
+# Cached shell init output (see evalcache in zsh/.zshenv) may be stale after upgrades
+evalcache_dir="$XDG_CACHE_HOME/zsh/evalcache"
+[[ -d "$evalcache_dir" ]] && rm -r -- "$evalcache_dir"
+
+exit 0

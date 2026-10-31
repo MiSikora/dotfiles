@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Update pip and every outdated package of the global pyenv Python
+pip install --quiet --upgrade pip
+
+outdated="$(pip list --outdated --format=json | jaq -r '.[].name')"
+
+if [[ -n "$outdated" ]]; then
+  # shellcheck disable=SC2086
+  pip install --upgrade $outdated
+fi
+
+pyenv rehash
