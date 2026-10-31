@@ -27,9 +27,6 @@ set +a
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Homebrew casks
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-
 # Homebrew config
 export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/homebrew/brewfile"
 
