@@ -48,7 +48,6 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 # Preferred tools
 typeset -U path PATH
 path=(
-  "$HOMEBREW_PREFIX/opt/bash/bin"
   "$HOMEBREW_PREFIX/opt/sqlite/bin"
   "$HOMEBREW_PREFIX/opt/curl/bin"
   "$HOMEBREW_PREFIX/opt/rustup/bin"
