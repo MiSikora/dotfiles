@@ -12,22 +12,20 @@ from typing import NoReturn
 
 
 class FormulaType(StrEnum):
+    # Every entry type `brew bundle dump` can emit on macOS, in Brewfile section order
     TAP = "tap"
     BREW = "brew"
     CASK = "cask"
+    MAS = "mas"
     NPM = "npm"
+    CARGO = "cargo"
+    GO = "go"
+    UV = "uv"
+    VSCODE = "vscode"
 
     @property
     def order(self) -> int:
-        match self:
-            case FormulaType.TAP:
-                return 1
-            case FormulaType.BREW:
-                return 2
-            case FormulaType.CASK:
-                return 3
-            case FormulaType.NPM:
-                return 4
+        return list(FormulaType).index(self)
 
 
 @dataclass(frozen=True)
@@ -511,6 +509,10 @@ def run_command(command: list[str]) -> str:
     )
 
     if result.returncode != 0:
+        print(
+            f"Command failed with exit code {result.returncode}: {' '.join(command)}",
+            file=sys.stderr,
+        )
         raise SystemExit(result.returncode)
 
     return result.stdout
