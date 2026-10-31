@@ -24,7 +24,6 @@ compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 
 # Interactive plugins
-source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$ZDOTDIR/fzf.zsh"
 
@@ -73,3 +72,6 @@ airlock() {
 alias bsync="brew update && brew upgrade && brew cu --all --cleanup --yes && brew bundle --verbose --global --force cleanup"
 alias ls="lsd -A --group-directories-first -I .DS_Store -I dotfiles.git"
 alias fzfa="atuin history list --cmd-only | fzf"
+
+# Must be sourced last, after every widget has been defined
+source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
