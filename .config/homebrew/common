@@ -83,6 +83,8 @@ brew "sqlite"
 brew "stylua"
 # Terminal multiplexer
 brew "tmux"
+# Parser generator tool
+brew "tree-sitter-cli"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Internet file retriever
