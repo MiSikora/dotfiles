@@ -51,6 +51,7 @@ path=(
   "$HOMEBREW_PREFIX/opt/bash/bin"
   "$HOMEBREW_PREFIX/opt/sqlite/bin"
   "$HOMEBREW_PREFIX/opt/curl/bin"
+  "$HOMEBREW_PREFIX/opt/rustup/bin"
   $path
 )
 
@@ -68,6 +69,3 @@ eval "$(pyenv init - zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-
-# Rust
-[[ -r "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"

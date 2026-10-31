@@ -317,6 +317,34 @@ else
   success "Node $node_version already installed"
 fi
 
+section "rustup setup"
+
+if ! rustup toolchain list 2>/dev/null | grep -q 'default)'; then
+  info "Installing stable Rust toolchain"
+  rustup default stable
+
+  if ! rustup toolchain list 2>/dev/null | grep -q 'default)'; then
+    fail "Failed to install stable Rust toolchain"
+  else
+    success "Stable Rust toolchain installed"
+  fi
+else
+  success "Rust toolchain already installed"
+fi
+
+if ! rustup component list --installed | grep -q '^rust-analyzer'; then
+  info "Installing rust-analyzer"
+  rustup component add rust-analyzer
+
+  if ! rustup component list --installed | grep -q '^rust-analyzer'; then
+    fail "Failed to install rust-analyzer"
+  else
+    success "rust-analyzer installed"
+  fi
+else
+  success "rust-analyzer already installed"
+fi
+
 section "zsh setup"
 
 brew_zsh="$(brew --prefix)/bin/zsh"
