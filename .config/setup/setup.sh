@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-set -e
+set -eu
+
+# Match what zsh/.zshenv and zsh/.zprofile set, for a fresh machine without them
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${DOTFILES_GIT:=$HOME/projects/dotfiles.git}"
+: "${GNUPGHOME:=$XDG_CONFIG_HOME/gnupg}"
+: "${HOMEBREW_PREFIX:=/opt/homebrew}"
+export XDG_CONFIG_HOME DOTFILES_GIT GNUPGHOME HOMEBREW_PREFIX
 
 section() {
   echo ""
@@ -68,8 +75,13 @@ section "Xcode CLI tools setup"
 if ! xcode-select --print-path >/dev/null 2>&1; then
   info "Installing Xcode CLI tools"
   touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-  softwareupdate -i -a
-  if ! [[ -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress ]]; then
+  # Install only the Command Line Tools entry, not every pending macOS update
+  clt_label="$(softwareupdate -l 2>/dev/null | grep -o 'Label: Command Line Tools.*' | sed 's/^Label: //' | sort -V | tail -1)"
+  if [[ -z "$clt_label" ]]; then
+    fail "Xcode CLI tools not found in the software update catalog"
+  fi
+  softwareupdate -i "$clt_label"
+  if [[ -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress ]]; then
     info "Deleting Xcode CLI tools progress temp file"
     rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
   fi
@@ -99,7 +111,7 @@ if ! command -v brew >/dev/null 2>&1; then
   else
     info "Disabling Homebrew analytics"
     brew analytics off
-    brew trust anomalyco/tap buo/cask-upgrade graalvm/tap mdogan/zulu nikitabobko/tap
+    brew trust buo/cask-upgrade graalvm/tap mdogan/zulu nikitabobko/tap
     success "Homebrew installed"
   fi
 else
@@ -111,14 +123,10 @@ HOMEBREW_DOTFILES_PROFILE="$DOTFILES_PROFILE" brew bundle --verbose --global
 section "Dotfiles git repository setup"
 
 if [[ ! -d "$DOTFILES_GIT" ]]; then
-  info "Initializing dotfiles git repository"
-  mkdir -p "$DOTFILES_GIT"
-  command git init --bare "$DOTFILES_GIT"
-  command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" add .
-  command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" remote add origin https://github.com/MiSikora/dotfiles.git
-  command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" remote update
+  info "Cloning dotfiles git repository"
+  command git clone --bare https://github.com/MiSikora/dotfiles.git "$DOTFILES_GIT"
   command git --git-dir="$DOTFILES_GIT" --work-tree="$HOME" checkout trunk
-  success "Dotfiles git repository initialized"
+  success "Dotfiles git repository cloned"
 else
   success "Dotfiles git repository already exists"
 fi
@@ -157,7 +165,7 @@ if ! gpg --list-secret-keys --keyid-format=long | grep -q E210EE60F056F7DD; then
     ;;
   *)
     rm -f "$git_crypt_key_path"
-    success "$git_crypt_key_path file succsessfully deleted"
+    success "$git_crypt_key_path file successfully deleted"
     ;;
   esac
 else
@@ -279,7 +287,7 @@ else
   success "Ruby $ruby_version already installed"
 fi
 
-section "pynev setup"
+section "pyenv setup"
 
 python_version="$(cat "$XDG_CONFIG_HOME"/pyenv/version)"
 if [[ $(pyenv version-name global) != "$python_version" ]]; then
@@ -304,7 +312,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 if [[ $(nvm alias default) != *"$node_version"* ]]; then
-  info "Installin Node $node_version"
+  info "Installing Node $node_version"
   nvm install "$node_version"
   nvm alias default "$node_version"
 
