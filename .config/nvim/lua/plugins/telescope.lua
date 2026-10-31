@@ -99,19 +99,18 @@ local function open_tmux_session_picker()
 end
 
 return {
-  "nvim-telescope/telescope.nvim",
-  tag = "0.1.8",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
-    },
+  src = "nvim-telescope/telescope.nvim",
+  version = "0.1.8",
+  deps = {
+    { src = "nvim-lua/plenary.nvim" },
+    { src = "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   },
-  opts = function()
+  config = function()
+    local telescope = require("telescope")
     local actions = require("telescope.actions")
+    local builtin = require("telescope.builtin")
 
-    return {
+    telescope.setup({
       defaults = {
         mappings = {
           i = {
@@ -123,23 +122,13 @@ return {
       extensions = {
         fzf = {},
       },
-    }
-  end,
-  keys = function()
-    local builtin = require("telescope.builtin")
-
-    return {
-      { "<leader>ff", builtin.find_files, desc = "Telescope: [F]ind [F]iles" },
-      { "<leader>fh", builtin.help_tags, desc = "Telescope: [F]ind [H]elp" },
-      { "<leader>fg", builtin.live_grep, desc = "Telescope: [F]ind [G]rep" },
-      { "<leader>fs", builtin.grep_string, desc = "Telescope: [F]ind [S]tring" },
-      { "<leader>ts", open_tmux_session_picker, desc = "Telescope: [T]mux [S]ession" },
-    }
-  end,
-  config = function(_, opts)
-    local telescope = require("telescope")
-
-    telescope.setup(opts)
+    })
     telescope.load_extension("fzf")
+
+    vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope: [F]ind [F]iles" })
+    vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope: [F]ind [H]elp" })
+    vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope: [F]ind [G]rep" })
+    vim.keymap.set("n", "<leader>fs", builtin.grep_string, { desc = "Telescope: [F]ind [S]tring" })
+    vim.keymap.set("n", "<leader>ts", open_tmux_session_picker, { desc = "Telescope: [T]mux [S]ession" })
   end,
 }

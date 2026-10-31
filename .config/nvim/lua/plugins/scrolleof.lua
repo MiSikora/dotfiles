@@ -1,7 +1,8 @@
 return {
-  "Aasim-A/scrollEOF.nvim",
-  event = { "CursorMoved", "WinScrolled" },
-  opts = {
-    insert_mode = true,
-  },
+  src = "Aasim-A/scrollEOF.nvim",
+  config = function()
+    require("scrollEOF").setup({
+      insert_mode = true,
+    })
+  end,
 }

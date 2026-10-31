@@ -6,7 +6,7 @@ gnupg/*
 karabiner/*
 pyenv/*
 rbenv/*
-nvim/lazy-lock.json
+nvim/nvim-pack-lock.json
 nvm/*
 !nvm/packages
 zsh/*

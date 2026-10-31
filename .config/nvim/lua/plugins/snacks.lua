@@ -1,13 +1,14 @@
 return {
-  "folke/snacks.nvim",
+  src = "folke/snacks.nvim",
   priority = 1000,
-  lazy = false,
-  opts = {
-    input = {},
-    styles = {
-      input = {
-        relative = "cursor",
+  config = function()
+    require("snacks").setup({
+      input = {},
+      styles = {
+        input = {
+          relative = "cursor",
+        },
       },
-    },
-  },
+    })
+  end,
 }
