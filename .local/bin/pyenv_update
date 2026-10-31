@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -lt 1 ]]; then
-  echo "Usage: $0 <python_version>"
-  exit 1
-fi
-
-python_version="$1"
-if [[ $(pyenv version-name global) == "$python_version" ]]; then
-  echo "Python version already set to $python_version"
-  exit 0
-fi
-
 if [[ -z ${XDG_CONFIG_HOME:-} ]]; then
   echo "XDG_CONFIG_HOME must be set" >&2
   exit 1
+fi
+
+version_file="$XDG_CONFIG_HOME/pyenv/version"
+
+if [[ $# -ge 1 ]]; then
+  python_version="$1"
+elif [[ -r "$version_file" ]]; then
+  python_version="$(<"$version_file")"
+else
+  echo "Usage: $0 [python_version] (defaults to $version_file)" >&2
+  exit 1
+fi
+
+if [[ $(pyenv version-name global) == "$python_version" ]]; then
+  echo "Python version already set to $python_version"
+  exit 0
 fi
 
 # Install the specified Python version
@@ -23,6 +28,6 @@ pyenv global "$python_version"
 pyenv rehash
 
 # Save the version to the version file
-echo "$python_version" >"$XDG_CONFIG_HOME/pyenv/version"
+echo "$python_version" >"$version_file"
 
 echo "Python $python_version installation complete"
