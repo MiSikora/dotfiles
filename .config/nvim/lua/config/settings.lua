@@ -27,9 +27,6 @@ vim.opt.listchars = {
 -- Replace tab with spaces
 vim.o.expandtab = true
 
--- Keep previous line indentation
-vim.o.autoindent = true
-
 -- Add automatic extra indentation for C-like constructs
 vim.o.smartindent = true
 
@@ -51,12 +48,6 @@ vim.o.scrolloff = 10
 -- Show vertical guide line
 vim.o.colorcolumn = "141"
 
--- Highlight all matches when searching
-vim.o.hlsearch = true
-
--- Highlight searches while typing
-vim.o.incsearch = true
-
 -- Make search case-insensitive
 vim.o.ignorecase = true
 
@@ -69,7 +60,7 @@ vim.o.updatetime = 300
 -- Configure autocompletion
 --   - Always show popup menu
 --   - Do not select automatically
---   - Show at most 10 matches at once
+--   - Show at most 15 matches at once
 vim.opt.completeopt = "menuone,noselect"
 vim.opt.pumheight = 15
 
