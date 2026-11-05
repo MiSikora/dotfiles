@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+#
+# Checks whether the translations for local */smartling branches are finished.
+#
+#   smartling-status                 check every local */smartling branch
+#   smartling-status <branch>...     check only the given branches
+#
+# 1. Fast-forwards the branches to their remote state.
+# 2. Checks that every translatable key of each changed strings file exists in every locale.
+#    Stops here if anything is missing.
+# 3. Asks Smartling whether those files are fully translated.
+#
+# Exits with 0 when everything is translated and 1 when it isn't.
+set -euo pipefail
+
+SMARTLING_API="https://api.smartling.com"
+# The repository connector uploads each branch's files under /<repo>/<branch>/<path>
+SMARTLING_URI_PREFIX="/android"
+FALLBACK_BASE="origin/develop"
+
+fail() {
+  echo "$1" >&2
+  exit 2
+}
+
+require_env() {
+  local name
+  for name in DDG_SMARTLING_PROJECT_ID DDG_SMARTLING_USER_ID DDG_SMARTLING_TOKEN; do
+    [[ -n "${!name:-}" ]] || fail "$name is not set"
+  done
+}
+
+# --- Git -------------------------------------------------------------------------------------------
+
+list_smartling_branches() {
+  git branch --list '*/smartling' --format='%(refname:short)'
+}
+
+update_branch() {
+  local branch=$1
+  if [[ "$branch" == "$(git branch --show-current)" ]]; then
+    git merge --ff-only --quiet "origin/$branch"
+  else
+    git fetch --quiet origin "$branch:$branch"
+  fi
+}
+
+# A <feature>/smartling branch sits on top of <feature>, so only its own commits carry the strings sent for translation
+base_branch_of() {
+  local feature=${1%/smartling}
+  local candidate
+  for candidate in "$feature" "origin/$feature"; do
+    if git rev-parse --verify --quiet "$candidate^{commit}" >/dev/null; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "$FALLBACK_BASE"
+}
+
+changed_strings_files() {
+  local branch=$1
+  local base
+  base=$(git merge-base "$(base_branch_of "$branch")" "$branch")
+  git diff --name-only --diff-filter=d "$base" "$branch" -- '*/values/strings*.xml'
+}
+
+# Prints the sorted names of translatable <string>, <plurals> and <string-array> entries in a file on a branch
+translatable_keys() {
+  local branch=$1 path=$2
+  git show "$branch:$path" 2>/dev/null |
+    grep -E '<(string|plurals|string-array)[[:space:]][^>]*name="' |
+    grep -v 'translatable="false"' |
+    sed -E 's/.*name="([^"]*)".*/\1/' |
+    sort -u || true
+}
+
+# sync/res/values/strings-sync.xml + values-fr -> sync/res/values-fr/strings-sync.xml
+locale_path() {
+  local path=$1 locale_dir=$2
+  echo "${path%/values/*}/$locale_dir/${path##*/}"
+}
+
+count_lines() {
+  grep -c . || true
+}
+
+# --- Step 2: local check ---------------------------------------------------------------------------
+
+# Prints "<locale>: <present>/<total>" for every locale missing keys. Returns 1 if any is.
+check_file_locally() {
+  local branch=$1 path=$2
+  local keys total locale_dir missing complete=true
+  keys=$(translatable_keys "$branch" "$path")
+  total=$(count_lines <<<"$keys")
+  for locale_dir in "${LOCALE_DIRS[@]}"; do
+    missing=$(comm -23 <(echo "$keys") <(translatable_keys "$branch" "$(locale_path "$path" "$locale_dir")") | count_lines)
+    if ((missing > 0)); then
+      echo "      $locale_dir: $((total - missing))/$total"
+      complete=false
+    fi
+  done
+  $complete
+}
+
+check_locally() {
+  local branch path files report complete=true
+  for branch in "${BRANCHES[@]}"; do
+    echo "$branch"
+    files=$(changed_strings_files "$branch")
+    if [[ -z "$files" ]]; then
+      echo "  no changed strings files"
+      continue
+    fi
+    while IFS= read -r path; do
+      if report=$(check_file_locally "$branch" "$path"); then
+        echo "  ✓ $path"
+      else
+        echo "  ✗ $path"
+        echo "$report"
+        complete=false
+      fi
+    done <<<"$files"
+  done
+  $complete
+}
+
+# --- Step 3: Smartling check -----------------------------------------------------------------------
+
+authenticate() {
+  local body response
+  body=$(jaq -n --arg user "$DDG_SMARTLING_USER_ID" --arg secret "$DDG_SMARTLING_TOKEN" '{userIdentifier: $user, userSecret: $secret}')
+  response=$(curl -sS --fail-with-body -X POST "$SMARTLING_API/auth-api/v2/authenticate" \
+    -H 'Content-Type: application/json' -d "$body") || fail "Smartling authentication failed: $response"
+  jaq -r '.response.data.accessToken' <<<"$response"
+}
+
+# Prints "<locale>: <completed>/<total>" for every unfinished locale. Returns 1 if any is unfinished,
+# or if Smartling doesn't know the file, e.g. because the connector hasn't uploaded it yet.
+check_file_in_smartling() {
+  local branch=$1 path=$2
+  local response unfinished
+  response=$(curl -sS -G "$SMARTLING_API/files-api/v2/projects/$DDG_SMARTLING_PROJECT_ID/file/status" \
+    -H "Authorization: Bearer $TOKEN" \
+    --data-urlencode "fileUri=$SMARTLING_URI_PREFIX/$branch/$path") || fail "Smartling request failed for $path"
+
+  if [[ "$(jaq -r '.response.code' <<<"$response")" != "SUCCESS" ]]; then
+    echo "      $(jaq -r '[.response.errors[]?.message] | join("; ")' <<<"$response")"
+    return 1
+  fi
+
+  # Locales Smartling hasn't started on are absent from its response, so we check the configured list too
+  unfinished=$(jaq -r --argjson locales "$SMARTLING_LOCALES" '
+    .response.data
+    | .totalStringCount as $total
+    | (reduce .items[] as $item ({}; .[$item.localeId] = $item.completedStringCount + ($item.excludedStringCount // 0))) as $completed
+    | ($locales + ($completed | keys)) | unique | .[]
+    | select(($completed[.] // 0) < $total)
+    | "      \(.): \($completed[.] // 0)/\($total)"
+  ' <<<"$response")
+
+  [[ -z "$unfinished" ]] && return 0
+  echo "$unfinished"
+  return 1
+}
+
+check_in_smartling() {
+  local branch path files report complete=true
+  for branch in "${BRANCHES[@]}"; do
+    files=$(changed_strings_files "$branch")
+    [[ -n "$files" ]] || continue
+    echo "$branch"
+    while IFS= read -r path; do
+      if report=$(check_file_in_smartling "$branch" "$path"); then
+        echo "  ✓ $path"
+      else
+        echo "  ✗ $path"
+        echo "$report"
+        complete=false
+      fi
+    done <<<"$files"
+  done
+  $complete
+}
+
+# --- Main ------------------------------------------------------------------------------------------
+
+require_env
+
+BRANCHES=()
+if (($# > 0)); then
+  BRANCHES=("$@")
+else
+  while IFS= read -r branch; do
+    [[ -n "$branch" ]] && BRANCHES+=("$branch")
+  done < <(list_smartling_branches)
+fi
+((${#BRANCHES[@]} > 0)) || fail "No local */smartling branches and none given as arguments"
+
+config="$(git rev-parse --show-toplevel)/smartling-config.json"
+[[ -f "$config" ]] || fail "$config not found"
+SMARTLING_LOCALES=$(jaq -c '[.locales[].smartling]' "$config")
+LOCALE_DIRS=()
+while IFS= read -r locale_dir; do
+  LOCALE_DIRS+=("$locale_dir")
+done < <(jaq -r '.locales[].application' "$config")
+
+echo "== Updating branches"
+git fetch --quiet origin
+for branch in "${BRANCHES[@]}"; do
+  update_branch "$branch" || echo "  can't fast-forward $branch to origin/$branch, using the local branch" >&2
+done
+
+echo
+echo "== Checking translations in the repository"
+if ! check_locally; then
+  echo
+  echo "Not everything is translated yet"
+  exit 1
+fi
+
+echo
+echo "== Checking translations in Smartling"
+TOKEN=$(authenticate)
+if ! check_in_smartling; then
+  echo
+  echo "Smartling hasn't finished translating yet"
+  exit 1
+fi
+
+echo
+echo "Everything is translated"

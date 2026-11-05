@@ -82,6 +82,10 @@
       "rev": "91a9c32228e9a7761d241023d9ebb9d11d8fb10d",
       "src": "https://github.com/rachartier/tiny-code-action.nvim"
     },
+    "trouble.nvim": {
+      "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
+      "src": "https://github.com/folke/trouble.nvim"
+    },
     "undotree": {
       "rev": "ae312c61558ee41316e992d3bae3afea2a77f62c",
       "src": "https://github.com/jiaoshijie/undotree"
