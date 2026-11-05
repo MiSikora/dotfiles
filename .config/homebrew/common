@@ -56,6 +56,8 @@ brew "lua-language-server"
 brew "neovim"
 # Manage multiple Node.js versions
 brew "nvm"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
 # Theme for zsh
 brew "powerlevel10k"
 # Python version management
