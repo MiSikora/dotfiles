@@ -3,5 +3,18 @@ set -euo pipefail
 
 AIRPODS_UUID="70-F9-4A-B8-9D-B0"
 
+# The AirPods only exist as an audio device once they're connected to this Mac,
+# so pull them over from whatever device they're on before switching.
+if [[ "$(blueutil --is-connected "$AIRPODS_UUID")" != "1" ]]; then
+  blueutil --connect "$AIRPODS_UUID"
+fi
+
+for _ in {1..20}; do
+  if SwitchAudioSource -a -t output -f cli | grep -q "$AIRPODS_UUID:output"; then
+    break
+  fi
+  sleep 0.5
+done
+
 SwitchAudioSource -t output -u "$AIRPODS_UUID:output"
 SwitchAudioSource -t input -u "$AIRPODS_UUID:input"
